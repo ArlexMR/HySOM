@@ -1,3 +1,3 @@
-from src import SOM
+from HystSOM import SOM
 
 print(SOM)
