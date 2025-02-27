@@ -2,11 +2,11 @@ import numpy as np
 from typing import Union, Callable
 from collections import defaultdict, namedtuple
 from dataclasses import dataclass, field
-from .validators import validate_constructor_params, validate_train_params, validate_codebooks_initialization
-from .functions import decay_linear, decay_piecewise, decay_power
-from .functions import gaussian, bubble, mexican_hat
-from .functions import euclidean, dtw
-from .datasets import *
+from src.validators import validate_constructor_params, validate_train_params, validate_codebooks_initialization
+from src.functions import decay_linear, decay_piecewise, decay_power
+from src.functions import gaussian, bubble, mexican_hat
+from src.functions import euclidean, dtw
+from src.datasets import *
 
 decay_functions = {"power": decay_power,
                          "linear": decay_linear,
