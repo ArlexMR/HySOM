@@ -4,7 +4,7 @@ from importlib import resources
 
 
 def get_classified_loops():
-    data_path = resources.files("HystSOM").joinpath("data/classified_loops.json")
+    data_path = resources.files("hystsom").joinpath("data/classified_loops.json")
 
     with open(data_path) as f:
         data = json.load(f)
