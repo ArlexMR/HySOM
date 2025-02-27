@@ -47,7 +47,7 @@ class SOM:
         input_dim : tuple 
             Shape of the input samples. Typically: (seq_len,2) where seq_len is the number of (x,y) coordinate points representing a loop
 
-        initial_sigma: float, optional (default = sqrt(width * ndim))
+        initial_sigma: float, optional (default = sqrt(width * height))
             Neighborhood radius at the first iteration
 
         initial_learning_rate: float, optional (default = 1.0)
@@ -59,7 +59,7 @@ class SOM:
         min_learning_rate: float, optional (default = 0.01)
             Learning rate at the last iteration
 
-        decay_sigma_func: str or callable, optional (default = "power")
+        decay_sigma_func: str or callable, optional (default = "power").
             Decay functions for the neighborhood radius. Available options: "power" or "linear"
             If callable, the provided function should receive four arguments: 
                 init_val: initial_sigma, 
