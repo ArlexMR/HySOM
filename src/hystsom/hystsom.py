@@ -2,11 +2,11 @@ import numpy as np
 from typing import Union, Callable
 from collections import defaultdict, namedtuple
 from dataclasses import dataclass, field
-from src.validators import validate_constructor_params, validate_train_params, validate_codebooks_initialization
-from src.functions import decay_linear, decay_piecewise, decay_power
-from src.functions import gaussian, bubble, mexican_hat
-from src.functions import euclidean, dtw
-from src.datasets import *
+from hystsom.validators import validate_constructor_params, validate_train_params, validate_codebooks_initialization
+from hystsom.functions import decay_linear, decay_piecewise, decay_power
+from hystsom.functions import gaussian, bubble, mexican_hat
+from hystsom.functions import euclidean, dtw
+from hystsom.datasets import *
 
 decay_functions = {"power": decay_power,
                          "linear": decay_linear,
