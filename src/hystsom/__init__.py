@@ -1,2 +1,2 @@
-from src.hystsom import SOM
-import src.datasets
+from hystsom.hystsom import SOM
+import hystsom.datasets as datasets
