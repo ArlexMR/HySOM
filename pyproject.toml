@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "HystSOM"
+description = "HystSOM Description"
+version = "0.1.0"
+readme = "README.md"
+dependencies = ["numpy>=2.2"]
+authors = [
+    {name = "Arlex Marin-Ramirez", email = "arlexmarinr@gmail.com"}
+]
+keywords = ["Self-Organizing Maps", "Hydrology", "Water Quality", "Discharge-Concentration", "Hysteresis"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Hydrology"
+]
+
+[project.urls]
+Repository = "https://github.com/ArlexMR/HystSOM"
