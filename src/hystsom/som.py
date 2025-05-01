@@ -2,11 +2,10 @@ import numpy as np
 from typing import Union, Callable
 from collections import defaultdict, namedtuple
 from dataclasses import dataclass, field
-from hystsom.validators import validate_constructor_params, validate_train_params, validate_codebooks_initialization
-from hystsom.functions import decay_linear, decay_piecewise, decay_power
-from hystsom.functions import gaussian, bubble, mexican_hat
-from hystsom.functions import euclidean, dtw
-from hystsom.datasets import *
+from HystSOM.validators import validate_constructor_params, validate_train_params, validate_codebooks_initialization
+from HystSOM.functions import decay_linear, decay_piecewise, decay_power
+from HystSOM.functions import gaussian, bubble, mexican_hat
+from HystSOM.functions import euclidean, dtw
 
 decay_functions = {"power": decay_power,
                          "linear": decay_linear,
@@ -21,19 +20,14 @@ distance_functions = {"euclidean": euclidean,
                       "dtw": dtw
                       }
 
+# map_grid = namedtuple("Map_grid",["x", "y"])
+
+# @dataclass
 class SOM:
     def __init__(self,
                 width: int,
                 height: int,
                 input_dim: tuple,
-                initial_sigma: float = None,
-                initial_learning_rate: float = 1.0,
-                min_sigma: float = 0.3,
-                min_learning_rate: float = 0.01,
-                decay_sigma_func: Union[str, callable]= "power",
-                decay_learning_rate_func: Union[str, callable]=  "power",
-                neighborhood_function: Union[str, callable]= "gaussian",
-                distance_function: Union[str, callable] = "dtw",
                 random_seed: int= None
                 ):
         """
@@ -47,7 +41,7 @@ class SOM:
         input_dim : tuple 
             Shape of the input samples. Typically: (seq_len,2) where seq_len is the number of (x,y) coordinate points representing a loop
 
-        initial_sigma: float, optional (default = sqrt(width * height))
+        initial_sigma: float, optional (default = sqrt(width * ndim))
             Neighborhood radius at the first iteration
 
         initial_learning_rate: float, optional (default = 1.0)
@@ -59,7 +53,7 @@ class SOM:
         min_learning_rate: float, optional (default = 0.01)
             Learning rate at the last iteration
 
-        decay_sigma_func: str or callable, optional (default = "power").
+        decay_sigma_func: str or callable, optional (default = "power")
             Decay functions for the neighborhood radius. Available options: "power" or "linear"
             If callable, the provided function should receive four arguments: 
                 init_val: initial_sigma, 
@@ -86,49 +80,12 @@ class SOM:
                 Returns: Matrix of neighborhood values of size (width, height)
                      
         """
-        if initial_sigma is None:
-            initial_sigma = np.sqrt(width * height)
 
-        # Validate decay functions
-        for param, name in [(decay_sigma_func, 'decay_sigma'), 
-                            (decay_learning_rate_func, 'decay_learning_rate')]:
-            if not (isinstance(param, str) or callable(param)):
-                raise TypeError(f"{name} must be either a string or a callable")
-
-        # Validate neighborhood_function
-        if not (isinstance(neighborhood_function, str) or callable(neighborhood_function)):
-            raise TypeError("neighborhood_function must be a string or callable")
-
-        # Validate distance_function
-        if not (isinstance(distance_function, str) or callable(distance_function)):
-            raise TypeError("distance_function must be a string or callable")
-
-        if isinstance(decay_sigma_func, str):
-            decay_sigma_func = decay_functions[decay_sigma_func]
-
-        if isinstance(decay_learning_rate_func, str):
-            decay_learning_rate_func = decay_functions[decay_learning_rate_func]
-        
-        if isinstance(neighborhood_function, str):
-            neighborhood_function = neighborhood_functions[neighborhood_function]
-
-        if isinstance(distance_function, str):
-            distance_function = distance_functions[distance_function]    
         
         self.width = width
         self.height = height
         self.input_dim = input_dim
-        self.initial_sigma = initial_sigma
-        self.initial_learning_rate = initial_learning_rate
-        self.decay_sigma_func = decay_sigma_func
-        self.decay_learning_rate_func = decay_learning_rate_func
-        self.neighborhood_function = neighborhood_function
-        self.distance_function = distance_function
-        self.min_sigma = min_sigma
-        self.min_learning_rate = min_learning_rate
         self.random_seed = random_seed
-
-
         self._grid = np.meshgrid(np.arange(self.height), np.arange(self.width), indexing="ij")
         self._rng = np.random.default_rng(self.random_seed)
         self._TE = []
@@ -152,11 +109,20 @@ class SOM:
 
     def train(self, data: np.ndarray, 
               epochs: int, 
-              random_order: bool = True, 
+              random_order: bool = True,
+              initial_sigma: float = None,
+              initial_learning_rate: float = 1.0,
+              min_sigma: float = 0.3,
+              min_learning_rate: float = 0.01,
+              decay_sigma_func: Union[str, callable]= "power",
+              decay_learning_rate_func: Union[str, callable]=  "power",
+              neighborhood_function: Union[str, callable]= "gaussian",
+              distance_function: Union[str, callable] = "dtw", 
               track_errors: bool = False, 
               errors_sampling_rate: int = 4, 
               errors_data_fraction: float = 1.0,
-              verbose: bool = False):
+              verbose: bool = False
+              ):
         """
         Trains the Self-Organizing Map (SOM).
 
@@ -186,9 +152,48 @@ class SOM:
             If int, this value represents the approximate number of times the status of the training process will be printed each epoch. 
 
         """
-        # validate input parameters
+        
+        if initial_sigma is None:
+            initial_sigma = np.sqrt(self.width * self.height)
+
         validate_train_params(data, epochs, random_order, track_errors, 
                                     errors_sampling_rate, errors_data_fraction, verbose)
+        # Validate decay functions
+        for param, name in [(decay_sigma_func, 'decay_sigma'), 
+                            (decay_learning_rate_func, 'decay_learning_rate')]:
+            if not (isinstance(param, str) or callable(param)):
+                raise TypeError(f"{name} must be either a string or a callable")
+
+        # Validate neighborhood_function
+        if not (isinstance(neighborhood_function, str) or callable(neighborhood_function)):
+            raise TypeError("neighborhood_function must be a string or callable")
+
+        # Validate distance_function
+        if not (isinstance(distance_function, str) or callable(distance_function)):
+            raise TypeError("distance_function must be a string or callable")
+
+        if isinstance(decay_sigma_func, str):
+            decay_sigma_func = decay_functions[decay_sigma_func]
+
+        if isinstance(decay_learning_rate_func, str):
+            decay_learning_rate_func = decay_functions[decay_learning_rate_func]
+        
+        if isinstance(neighborhood_function, str):
+            neighborhood_function = neighborhood_functions[neighborhood_function]
+
+        if isinstance(distance_function, str):
+            distance_function = distance_functions[distance_function]    
+        
+        
+        self.initial_sigma = initial_sigma
+        self.initial_learning_rate = initial_learning_rate
+        self.decay_sigma_func = decay_sigma_func
+        self.decay_learning_rate_func = decay_learning_rate_func
+        self.neighborhood_function = neighborhood_function
+        self.distance_function = distance_function
+        self.min_sigma = min_sigma
+        self.min_learning_rate = min_learning_rate
+        
         nsamples = len(data)
 
         if self._codebooks is None:

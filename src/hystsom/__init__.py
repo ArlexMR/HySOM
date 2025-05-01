@@ -1,1 +1,1 @@
-from hystsom.hystsom import SOM
+from HystSOM.som import SOM

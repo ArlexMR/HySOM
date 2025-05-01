@@ -1,5 +1,5 @@
 import numpy as np
-
+from tslearn.metrics import dtw as tslearndtw
 #Decay functions
 def decay_linear(init_val, iter, max_iter, min_val):
      slope =  (init_val - min_val) / max_iter 
@@ -33,5 +33,6 @@ def euclidean(codebooks, sample):
      
 
 def dtw(codebooks, sample):
-     pass
+    #return np.array([[dtw(unit,x) for unit in row] for row in codebooks])
+    return np.array([[tslearndtw(unit,sample) for unit in row] for row in codebooks])
 
