@@ -2,10 +2,10 @@ import numpy as np
 from typing import Union, Callable
 from collections import defaultdict, namedtuple
 from dataclasses import dataclass, field
-from hystsom._validators import validate_constructor_params, validate_train_params, validate_codebooks_initialization
-from hystsom._functions import decay_linear, decay_piecewise, decay_power
-from hystsom._functions import gaussian, bubble, mexican_hat
-from hystsom._functions import euclidean, dtw
+from hysom._validators import validate_constructor_params, validate_train_params, validate_codebooks_initialization
+from hysom._functions import decay_linear, decay_piecewise, decay_power
+from hysom._functions import gaussian, bubble, mexican_hat
+from hysom._functions import euclidean, dtw
 
 decay_functions = {"power": decay_power,
                          "linear": decay_linear,

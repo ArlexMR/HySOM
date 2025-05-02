@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "HystSOM-arlexmr"
-description = "HystSOM Description"
+name = "HySOM"
+description = "Fast, lightweight library for training Self-Organizing Maps on multidimensional time series, tailored for analyzing concentration-discharge hysteresis loops."
 version = "0.1.0"
 readme = "README.md"
 dependencies = ["numpy>=1.26", "matplotlib>=3.9", "tslearn>=0.6.3"]

@@ -1,5 +1,7 @@
 from typing import Union, Callable
 import numpy as np
+
+
 def validate_constructor_params(hdim, vdim, input_dim, decay_sigma, decay_learning_rate, neighborhood_function, distance_function, min_sigma, min_learning_rate):
 
         if not isinstance(input_dim, tuple):
