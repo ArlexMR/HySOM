@@ -34,9 +34,6 @@ Includes the General T–Q SOM, a standard framework for analyzing sediment tran
 
 ---
 
-### 📚 Documentation  
-Comprehensive documentation is available at:  https://www.documentation.com
-
 ### 🤝 Contributing
 We welcome contributions! If you'd like to improve the code, report issues, or request features, please open a GitHub issue or pull request.
 
