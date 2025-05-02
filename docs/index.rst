@@ -6,21 +6,19 @@
 Welcome to the HySOM documentation
 ===========================================================
 
-This is the documentation for the **HySOM** Python package. **HySOM** provides tools for analyzing concentration - discharge hysteresis 
-loops sing Self-Organizing Maps (SOM). The source code is available on `Github <https://github.com/ArlexMR/C-Q-Hysteresis-analysis-tools->`_
+This is the documentation for the **HySOM** Python package. **HySOM** provides tools for analyzing 2D time series data using Self-Organizing Maps (SOM). This package is tailored for studying concentration - discharge hysteresis loops, although any 2D time series can be used.  
 
-On this documentation page, you’ll find a quickstart guide with instructions on installation and usage of the package, including sample data. We’ve also written a few 
-tutorials that walk you through code examples to train and use SOM for C-Q hysteresis analysis.
+The source code is available on `Github <https://github.com/ArlexMR/C-Q-Hysteresis-analysis-tools->`_
 
-..
-   Contents
-   =========
+On this documentation page, you’ll find a quickstart guide with instructions on installation and usage of the package, including sample data. We’ve also written a few tutorials that walk you through code examples to train and use SOM for C-Q hysteresis analysis.
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   Install it! <usage/installation>
-   Quickstart it! <usage/quickstart>
-   usage/how-tos
+   Installation <usage/installation>
+   Quickstart <usage/quickstart>
+   How to guides <usage/how-tos>
 
 

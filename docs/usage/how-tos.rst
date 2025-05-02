@@ -1,11 +1,12 @@
 How to guides
 =================
+Explore the following how-to guides to accomplish common tasks with the HySOM package
 
+.. toctree::
+   :maxdepth: 1
 
-How to do this
-------------------
-How to do that
-------------------
-
-How to do this
-------------------
+   How to add a custom (Distance, Neighborhood or Decay) function <tutorials>
+   
+   How to find the best hyperparameters for your dataset <tutorials>
+   
+   How to train your own C-Q map <tutorials>

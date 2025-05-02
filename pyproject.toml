@@ -11,7 +11,7 @@ dependencies = ["numpy>=1.26", "matplotlib>=3.9", "tslearn>=0.6.3"]
 authors = [
     {name = "Arlex Marin-Ramirez", email = "arlexmarinr@gmail.com"}
 ]
-keywords = ["Self-Organizing Maps", "Hydrology", "Water Quality", "Discharge-Concentration", "Hysteresis"]
+keywords = ["Self-Organizing Maps", "SOM", "unsupervised learning", "clustering", "Hydrology", "Water Quality", "Discharge-Concentration", "Hysteresis", "time series"]
 classifiers = [
     "Intended Audience :: Science/Research",
     "Programming Language :: Python :: 3",
@@ -19,7 +19,7 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/ArlexMR/HystSOM"
+Repository = "https://github.com/ArlexMR/HySOM"
 
 [tool.setuptools]
 packages = { find = { where = ["src"] } }

@@ -1,13 +1,52 @@
 Quickstart
 ===========
 
-In this section you'll find some tutorials to get you started with the **CQtools** package. The tutorials are designed to be easy to follow and provide a step-by-step guide to using the package for C-Q hysteresis analysis.
+This section provides tutorials to help you get started with the HySOM package. Designed for easy learning, they offer step-by-step guidance on using the package.  
+Below is a minimal example demonstrating how to train a Self-Organizing Map (SOM) with default hyperparameters on a sample dataset and visualize the results.
 
+
+✨ Quick Example
+
+.. code-block:: python
+
+   from hysom import SOM
+   from hysom.datasets import load_sample_data
+   import numpy as np
+
+   # Generate synthetic data
+   data = load_sample_data()  
+
+   # Train SOM
+   som = SOM(width=8, height=8, input_dim = data.shape[1:])
+   som.train(data, epochs = 5)
+
+   # Visualize results
+   plot_som_map(som)
+
+For a detailed explanation of the SOM class, including its methods and parameters, refer to the following resources.
 
 .. toctree::
    :maxdepth: 1
-   :numbered:
 
+   The SOM class <tutorials>
+   
+To gain better control over the training process, explore the tutorials below.
 
-   tutorials
-   tutorials2
+.. toctree::
+   :maxdepth: 1
+
+   Customizing training parameters <tutorials>
+
+To diagnose the training process using topographic and quantization errors, see the following tutorials.
+
+.. toctree::
+   :maxdepth: 1
+
+   Evaluating training performance <tutorials>
+
+To explore the visualization functions available in the package, refer to the following tutorials.
+
+.. toctree::
+   :maxdepth: 1
+
+   Visualize your SOM <tutorials>
