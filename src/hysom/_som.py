@@ -20,15 +20,9 @@ distance_functions = {"euclidean": euclidean,
                       "dtw": dtw
                       }
 
-class SOM:
-    def __init__(self,
-                width: int,
-                height: int,
-                input_dim: tuple,
-                random_seed: int= None
-                ):
-        """
-        Initialize Self Organizing Map
+class HSOM:
+    """
+        Self-Organizing Map (SOM) for 2D data.
 
         Parameters
         ----------
@@ -76,7 +70,14 @@ class SOM:
             
                 Returns: Matrix of neighborhood values of size (width, height)
                      
-        """
+    """
+    def __init__(self,
+                width: int,
+                height: int,
+                input_dim: tuple,
+                random_seed: int= None
+                ):
+
 
         
         self.width = width

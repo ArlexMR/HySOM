@@ -28,7 +28,7 @@ For a detailed explanation of the SOM class, including its methods and parameter
 .. toctree::
    :maxdepth: 1
 
-   The SOM class <../tutorials/tutorials>
+   The SOM class <../tutorials/thesomclass>
    
 To gain better control over the training process, explore the tutorials below.
 
