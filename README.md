@@ -35,8 +35,7 @@ Includes the General T–Q SOM, a standard framework for analyzing sediment tran
 ---
 
 ### 📚 Documentation  
-Comprehensive documentation is available at:  
-👉 https://your-documentation-url
+Comprehensive documentation is available at:  https://your-documentation-url
 
 ### 🤝 Contributing
 We welcome contributions! If you'd like to improve the code, report issues, or request features, please open a GitHub issue or pull request.
@@ -45,4 +44,4 @@ We welcome contributions! If you'd like to improve the code, report issues, or r
 GitHub: https://github.com/yourusername/som-loop
 
 
-[Tutorial](https://colab.research.google.com/drive/1lNRfSmOkerxerLiB5Gw910OUH5XNzypw?usp=sharing)
+<!-- [Tutorial](https://colab.research.google.com/drive/1lNRfSmOkerxerLiB5Gw910OUH5XNzypw?usp=sharing) -->
