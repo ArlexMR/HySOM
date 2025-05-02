@@ -20,17 +20,19 @@ HySOM is a Python library that simplifies training and visualizing Self-Organizi
 
 ---
 
+
+# 🌊 Use Case: C-Q Hysteresis Loop Analysis
+Includes the General T–Q SOM, a standard framework for analyzing sediment transport hysteresis loops. Details on its development can be found [here](link.to.my.paper). Usage examples can be found in the [Documentation](www.documentation.com)
+
+---
+
 ## 📦 Dependencies
 HySOM requires the following libraries for proper functioning:  
 - numpy
 - tslearn
 - matplotlib
 
----
 
-
-# 🌊 Use Case: C-Q Hysteresis Loop Analysis
-Includes the General T–Q SOM, a standard framework for analyzing sediment transport hysteresis loops. Details on its development can be found [here](link.to.my.paper). Usage examples can be found in the [Documentation](www.documentation.com)
 
 ---
 
