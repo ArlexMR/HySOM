@@ -15,7 +15,8 @@ release = '0.1.0'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "myst_nb"
+    "myst_nb",
+
 ]
 
 nb_execution_mode = "off"

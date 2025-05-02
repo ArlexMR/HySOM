@@ -28,25 +28,25 @@ For a detailed explanation of the SOM class, including its methods and parameter
 .. toctree::
    :maxdepth: 1
 
-   The SOM class <tutorials>
+   The SOM class <../tutorials/tutorials>
    
 To gain better control over the training process, explore the tutorials below.
 
 .. toctree::
    :maxdepth: 1
 
-   Customizing training parameters <tutorials>
+   Customizing training parameters <../tutorials/tutorials>
 
 To diagnose the training process using topographic and quantization errors, see the following tutorials.
 
 .. toctree::
    :maxdepth: 1
 
-   Evaluating training performance <tutorials>
+   Evaluating training performance <../tutorials/tutorials>
 
 To explore the visualization functions available in the package, refer to the following tutorials.
 
 .. toctree::
    :maxdepth: 1
 
-   Visualize your SOM <tutorials>
+   Visualize your SOM <../tutorials/tutorials>

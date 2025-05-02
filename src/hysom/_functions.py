@@ -1,5 +1,9 @@
 import numpy as np
-from tslearn.metrics import dtw as tslearndtw
+import warnings 
+
+with warnings.catch_warnings():
+     warnings.filterwarnings("ignore", message="h5py not installed, hdf5 features will not be supported.")
+     from tslearn.metrics import dtw as tslearndtw
 
 
 #Decay functions
