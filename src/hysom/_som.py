@@ -22,54 +22,62 @@ distance_functions = {"euclidean": euclidean,
 
 class HSOM:
     """
-        Self-Organizing Map (SOM) for 2D data.
+    Self-Organizing Map (SOM) for 2D data.
 
-        Parameters
-        ----------
-        width, height : int
-            Map dimensions
+    Parameters
+    ----------
+    width : int
+        Number of units along the width of the map.
 
-        input_dim : tuple 
-            Shape of the input samples. Typically: (seq_len,2) where seq_len is the number of (x,y) coordinate points representing a loop
+    height : int
+        Number of units along the height of the map.
 
-        initial_sigma: float, optional (default = sqrt(width * ndim))
-            Neighborhood radius at the first iteration
+    input_dim : tuple (int, int)
+        Shape of the input samples. Typically `(seq_len, 2)`, where `seq_len` is the number 
+        of (x, y) coordinate points representing a loop.
 
-        initial_learning_rate: float, optional (default = 1.0)
-            Learning rate at the first iteration
+    initial_sigma : float, optional (default: sqrt(width * input_dim[1]))
+        Neighborhood radius at the first iteration.
 
-        min_sigma: float, optional (default = 0.3)
-            Neighborhood radius at the last iteration
+    initial_learning_rate : float, optional (default: 1.0)
+        Learning rate at the first iteration.
 
-        min_learning_rate: float, optional (default = 0.01)
-            Learning rate at the last iteration
+    min_sigma : float, optional (default: 0.3)
+        Neighborhood radius at the last iteration.
 
-        decay_sigma_func: str or callable, optional (default = "power")
-            Decay functions for the neighborhood radius. Available options: "power" or "linear"
-            If callable, the provided function should receive four arguments: 
-                init_val: initial_sigma, 
-                iter: current iteration, 
-                max_iter: maximum number of iterations, 
-                min_val: minimum value 
-            and return a number 
+    min_learning_rate : float, optional (default: 0.01)
+        Learning rate at the last iteration.
+
+    decay_sigma_func : str or callable, optional (default: "power")
+        Decay function for the neighborhood radius.  
+        Available options: `"power"`, `"linear"`.  
+        If callable, the function should accept four arguments:
         
-        decay_learning_rate_func: str or callable, optional (default = "power")
-            same as for decay_sigma_func
+        - `init_val` (float): Initial neighborhood radius.
+        - `iter` (int): Current iteration.
+        - `max_iter` (int): Maximum number of iterations.
+        - `min_val` (float): Minimum radius value.  
+        
+        The function must return a numeric value.  
+        See some examples of decay functions in `the source code <https://github.com/ArlexMR/HySOM/blob/main/src/hysom/_functions.py>`_.
 
-        neighborhood_function: str or callable, optional (default = gaussian)
-            Neighborhood function. Available options: "gaussian", "mexican_hat", "bubble"
-            If callable, the provided functions should receive three arguments:
-                
-                grid: tuple of coordinate matrices as returned by numpy.meshgrid with matrix indexing convention: 
-                    grid = np.meshgrid(np.arange(width), np.arange(height), indexing="ij")
+    decay_learning_rate_func : str or callable, optional (default: "power")
+        Same format as `decay_sigma_func`, but applied to the learning rate.
 
-                center: tuple defining coordinates of the center. That is, where the neighborhood function
-                        returns a value of 1.0 (peak value). Coordinates follow matrix convention (i,j)
+    neighborhood_function : str or callable, optional (default: "gaussian")
+        Defines the neighborhood function.  
+        Available options: `"gaussian"`, `"mexican_hat"`, `"bubble"`.  
+        If callable, the function should accept three arguments:
 
-                sigma: float defining the neighborhood radius  
-            
-                Returns: Matrix of neighborhood values of size (width, height)
-                     
+        - `grid` (tuple of numpy arrays): Coordinate matrices as returned by `numpy.meshgrid`.  
+          Use matrix indexing convention:  
+          ```python
+          grid = np.meshgrid(np.arange(width), np.arange(height), indexing="ij")
+          ```
+        - `center` (tuple): Coordinates where the function returns 1.0 (peak value), using `(i, j)` matrix convention.
+        - `sigma` (float): Defines the neighborhood radius.  
+
+        The function should return a matrix of neighborhood values with shape `(width, height)`.
     """
     def __init__(self,
                 width: int,
@@ -78,8 +86,6 @@ class HSOM:
                 random_seed: int= None
                 ):
 
-
-        
         self.width = width
         self.height = height
         self.input_dim = input_dim

@@ -21,6 +21,7 @@ def decay_piecewise(init_val, iter, max_iter, min_val):
 
 # Neighborhood functions
 def gaussian(grid, center, sigma):
+    
     distances = np.sqrt( (grid[0] - center[0])**2 + (grid[1] - center[1])**2 )
     neig_vals = np.exp( - distances ** 2 / (2 * sigma**2))
     return neig_vals
