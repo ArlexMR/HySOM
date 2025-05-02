@@ -5,7 +5,7 @@
 
 ## 🚀 Overview
 
-HySOM is a Python library that simplifies training and visualizing Self-Organizing Maps (SOMs) for 2D time series analysis. It is specifically designed to study concentration–discharge (C–Q) hysteresis loops in streams leveraging [tslearn's Dynamic Time Warping implementation](https://tslearn.readthedocs.io/en/stable/user_guide/dtw.html) for the distance function, although other options are available such as Euclidean, Cosine and custom functions. HySOM also offers flexibility on the neighborhood and decay functions. See the [Documentation] for more details.
+HySOM is a Python library that simplifies training and visualizing Self-Organizing Maps (SOMs) for 2D time series analysis. It is specifically designed to study concentration–discharge (C–Q) hysteresis loops in streams leveraging [tslearn's Dynamic Time Warping implementation](https://tslearn.readthedocs.io/en/stable/user_guide/dtw.html) for the distance function, although other options are available such as Euclidean, Cosine and custom functions. HySOM also offers flexibility on the neighborhood and decay functions. See the [Documentation](www.documentation.com) for more details.
 
 ---
 
@@ -30,18 +30,15 @@ HySOM requires the following libraries for proper functioning:
 
 
 # 🌊 Use Case: C-Q Hysteresis Loop Analysis
-Includes the General T–Q SOM, a standard framework for analyzing sediment transport hysteresis loops. Details on its development can be found [here](link.to.my.paper). Usage examples can be found in the [Documentation](link.to.documentation.Generaltqmap)
+Includes the General T–Q SOM, a standard framework for analyzing sediment transport hysteresis loops. Details on its development can be found [here](link.to.my.paper). Usage examples can be found in the [Documentation](www.documentation.com)
 
 ---
 
 ### 📚 Documentation  
-Comprehensive documentation is available at:  https://your-documentation-url
+Comprehensive documentation is available at:  https://www.documentation.com
 
 ### 🤝 Contributing
 We welcome contributions! If you'd like to improve the code, report issues, or request features, please open a GitHub issue or pull request.
-
-### 🔗 Links
-GitHub: https://github.com/yourusername/som-loop
 
 
 <!-- [Tutorial](https://colab.research.google.com/drive/1lNRfSmOkerxerLiB5Gw910OUH5XNzypw?usp=sharing) -->
