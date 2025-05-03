@@ -1,7 +1,7 @@
 API Documentation
 =================
 
-.. automodule:: hysom._som
+.. automodule:: hysom.hysom
    :members: 
    :undoc-members:
 

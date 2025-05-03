@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Union
+from typing import Union, Tuple
 from hysom.validators import validate_train_params, validate_prototypes_initialization
 from hysom.train_functions import decay_linear, decay_power, gaussian, bubble, mexican_hat, euclidean, dtw
 from hysom.utils.aux_funcs import resolve_function
@@ -29,12 +29,13 @@ class HSOM:
     height : int
         Number of units along the height of the map.
 
-    input_dim : tuple (int, int)
+    input_dim : tuple of int
         Shape of the input samples. Typically `(seq_len, 2)`, where `seq_len` is the number 
-        of (x, y) coordinate points representing a loop.
+        of (x, y) coordinate points representing a sample.
 
-    random_seed : int (dafault = None)
-        random_seed Ensures reproducibility. if None results may change each time due to random elements in the training process
+    random_seed : int, optional
+        Ensures reproducibility. If None, results may vary each time due to random elements 
+        in the training process. Default is None.
     """
     def __init__(self,
                 width: int,
@@ -56,6 +57,11 @@ class HSOM:
     def random_init(self, data: np.ndarray):
 
         """Initialize prototypes randomly from data
+
+        Parameters
+        ----------
+        data : np.ndarray
+            Data
         """
         random_sample = self._rng.choice(data,self.width * self.height, replace = False)
         prototypes_dim = (self.height, self.width) + self.input_dim
@@ -63,8 +69,16 @@ class HSOM:
         self.set_init_prototypes(init_prototypes)
 
     def set_init_prototypes(self, prototypes: np.ndarray):
-        """Initialize prototypes
         """
+        Initialize prototypes.
+
+        Parameters
+        ----------
+        prototypes : np.ndarray
+            The shape of `prototypes` must be consistent with the SOM dimensions and input dimensions (`input_dim`):  
+            `prototypes.shape = (height, width, seq_len, 2)`.
+        """
+
         validate_prototypes_initialization(self.width, self.height, self.input_dim, prototypes)
         self._prototypes = prototypes
 
@@ -90,15 +104,15 @@ class HSOM:
         Parameters
         ----------
         data : np.ndarray
-            Data array. The first dimension corresponds to the number of samples.
+            Data array. The first dimension corresponds to the number of samples. Second and third dimensions must be consistent with `input_dim`
 
         epochs : int
-            The number of training iterations (epochs). Each data sample is fed to the map once every epoch.
+            Defines the number of training iterations (`total_iterations = number_of_samples * epochs`). Each data sample is fed to the map once every epoch.
 
         random_order : bool, optional (default=True)
             If True, samples are picked randomly without replacement. If False, they are fed sequentially.
         
-        initial_sigma : float, optional (default: sqrt(width * input_dim[1]))
+        initial_sigma : float, optional (default: sqrt(width * height))
             Neighborhood radius at the first iteration.
 
         initial_learning_rate : float, optional (default: 1.0)
@@ -111,38 +125,43 @@ class HSOM:
             Learning rate at the last iteration.
 
         decay_sigma_func : str or callable, optional (default: "power")
-            Decay function for the neighborhood radius.  
+            Decay function for the neighborhood radius. Defines how the neighborhood radius change from `initial_sigma` to `min_sigma` 
             Available options: `"power"`, `"linear"`.  
             If callable, the function should accept four arguments:
             
-            - `init_val` (float): Initial neighborhood radius.
-            - `iter` (int): Current iteration.
-            - `max_iter` (int): Maximum number of iterations.
-            - `min_val` (float): Minimum radius value.  
-            
+                - `init_val` (float): Initial neighborhood radius.
+                - `iter` (int): Current iteration.
+                - `max_iter` (int): Maximum number of iterations.
+                - `min_val` (float): Minimum radius value.  
+                
             The function must return a numeric value.  
-            See some examples of decay functions in `the source code <https://github.com/ArlexMR/HySOM/blob/main/src/hysom/_functions.py>`_.
+
+            Examples
+            --------
+            >>> def decay_linear(init_val, iteration, max_iter, min_val):
+            >>>    slope =  (init_val - min_val) / max_iter 
+            >>>    return init_val - (slope * iteration)
+
+            See the Tutorials for additional details
 
         decay_learning_rate_func : str or callable, optional (default: "power")
             Same format as `decay_sigma_func`, but applied to the learning rate.
 
         neighborhood_function : str or callable, optional (default: "gaussian")
-            Defines the neighborhood function.  
+            Defines the neighborhood function.   
+
             Available options: `"gaussian"`, `"mexican_hat"`, `"bubble"`.  
             If callable, the function should accept three arguments:
 
-            - `grid` (tuple of numpy arrays): Coordinate matrices as returned by `numpy.meshgrid`.  
-            Use matrix indexing convention:  
-            ```python
-            grid = np.meshgrid(np.arange(width), np.arange(height), indexing="ij")
-            ```
-            - `center` (tuple): Coordinates where the function returns 1.0 (peak value), using `(i, j)` matrix convention.
-            - `sigma` (float): Defines the neighborhood radius.  
+                - `grid` (tuple of numpy arrays): Coordinate matrices as returned by `numpy.meshgrid` using matrix indexing convention:  
+                - `center` (tuple): Coordinates where the function returns 1.0 (peak value), using `(i, j)` matrix convention.
+                - `sigma` (float): Defines the neighborhood radius.  
 
             The function should return a matrix of neighborhood values with shape `(width, height)`.
+            See the Tutorials for additional details
 
         track_errors : bool, optional (default=False)
-            If True, quantization error (QE) and topographic error (TE) will be computed during training. These values can be accessed using `self.get_QE_history()` and `self.get_TE_history()`.
+            If True, quantization error (QE) and topographic error (TE) will be computed during training. These values can be accessed using `get_QE_history()` and `get_TE_history()`.
 
         errors_sampling_rate : int, optional (default=4)
             If `track_errors` is True, this parameter controls how often errors are tracked. Errors will be tracked `errors_sampling_rate` times per epoch.            
@@ -203,7 +222,7 @@ class HSOM:
                 sample = data[idx]
                 learning_rate = self.decay_learning_rate_func(self.initial_learning_rate, iter, max_iter, self.min_learning_rate)
                 sigma = self.decay_sigma_func(self.initial_sigma, iter, max_iter, self.min_sigma)
-                self.update(sample, learning_rate, sigma)
+                self._update(sample, learning_rate, sigma)
 
                 if self._is_time_to_track_errors(inner_iter, samples_per_error):
                     self._track_errors(iter, data, nsamples_error)
@@ -222,77 +241,120 @@ class HSOM:
 
         return max_iter,list_idxs
     
-    def update(self, sample, learning_rate, sigma):
-        """Update prototypes
-        """
+    def _update(self, sample, learning_rate, sigma):
+
         bmu = self.get_BMU(sample)
         neighborhood_vals = self.neighborhood_function(self._grid, bmu, sigma)
         reshaped_nv = neighborhood_vals.repeat(self.input_dim[0] * self.input_dim[1]).reshape(self.height, self.width, self.input_dim[0], self.input_dim[1])
         self._prototypes += learning_rate * reshaped_nv * (sample - self._prototypes)
  
-    def get_BMU(self, sample):
-        """return BMU coordinates
-        """ 
+    def get_BMU(self, sample: np.ndarray) -> Tuple[int,int]:
+        """
+        Return BMU coordinates for a given `sample`, following matrix notation: `(row, col)`.
+
+        Parameters
+        ----------
+        sample : np.ndarray
+            Input sample with shape `(sequence_length, 2)`.
+
+        Returns
+        -------
+        Tuple
+            Coordinates of the Best Matching Unit `(row, col)`.
+        """
+
         distances = self.distance_function(self._prototypes, sample)
         return np.unravel_index(distances.argmin(), distances.shape)
 
     def quantization_error(self, data: np.ndarray):
-        """Quantization error for each sample in data 
-            Parameters
-            ----------
-            data : np.ndarray
-                Collection of data samples with shape (nsamples, seq_len, 2)
+        """
+        Compute the quantization error for each sample in `data`.
 
-            Returns  
-            qe : list
-                Quantization error for each data sample
+        Parameters
+        ----------
+        data : np.ndarray
+            Collection of data samples with shape `(nsamples, seq_len, 2)`.
+
+        Returns
+        -------
+        List
+            Quantization error for each data sample.
         """
         return [self.distance_function(self._prototypes, sample).min() for sample in data]
 
     def topographic_error(self, data: np.ndarray):
-        """Topographic error for each sample in data 
-            Parameters
-            ----------
-            data : np.ndarray
-                Collection of data samples with shape (nsamples, seq_len, 2)
+        """
+        Compute the topographic error for each sample in `data`.
 
-            Returns  
-            qe : list
-                Topographic error for each data sample. 
+        Parameters
+        ----------
+        data : np.ndarray
+            Collection of data samples with shape `(nsamples, seq_len, 2)`.
+
+        Returns
+        -------
+        List
+            Topographic error for each data sample.
         """
         distances = np.array([self.distance_function(self._prototypes, sample) for sample in data])
         xyindexes = [np.unravel_index(np.argpartition(dist_matrix.flatten(), (0,1))[[0,1]], (self.height, self.width)) for dist_matrix in distances]
         bmu_to_nextbmu_dists = [max(abs(X[0] - X[1]), abs(Y[0] - Y[1])) for X,Y in xyindexes]
         return (np.array(bmu_to_nextbmu_dists) > 1).astype(int).tolist()
 
-    def get_QE_history(self):
+    def get_QE_history(self) -> Tuple[Tuple[int, ...], Tuple[float, ...]]:
+        """
+        Get the average quantization error across iterations.
+
+        Only available if `track_errors` is set to `True` during training.
+
+        Returns
+        -------
+        iteration : Tuple
+            Iteration indices.
+
+        QE : Tuple
+            Average quantization error values.
+
+        """
+
         if self._QE:
             t, qe = zip(*self._QE)
         else: 
             t = qe = None
         return t, qe
 
-    def get_TE_history(self):
+    def get_TE_history(self)-> Tuple[Tuple[int, ...], Tuple[float, ...]]:
+        """
+        Get the average topographic error across iterations.
+
+        Only available if `track_errors` is set to `True` during training.
+
+        Returns
+        -------
+        iteration : Tuple
+            Iteration indices.
+
+        QE : Tuple
+            Average topographic error values.
+
+        """
         if self._QE:
             t, te = zip(*self._TE)
         else: 
             t = te = None
         return t, te
 
-    def get_prototypes(self):
-        return self._prototypes
-    
-    def get_frequencies(self, data):
+    def get_prototypes(self) -> np.ndarray:
         """
-        Return activation frequency for each prototype 
-        
-        Parameters
-        ----------
-            data : np.ndarray
-                Collection of data samples with shape (nsamples, seq_len, 2)
-        
+        Get the prototypes.
+
         Returns
+        -------
+        np.ndarray
+            prototypes array.
         """
+
+        return self._prototypes
 
     def _track_errors(self, iter, data, nsamples_error):
         subset = self._rng.choice(data, size = nsamples_error, replace=False)
@@ -307,7 +369,7 @@ class HSOM:
         xyindexes = [np.unravel_index(np.argpartition(dist_matrix.flatten(), (0,1))[[0,1]], (self.height, self.width)) for dist_matrix in distances]
         bmu_to_nextbmu_dists = [max(abs(X[0] - X[1]), abs(Y[0] - Y[1])) for X,Y in xyindexes]
         te = (np.array(bmu_to_nextbmu_dists) > 1).sum() / len(data)
-        return qe, te 
+        return float(qe), float(te) 
 
     def _is_time_to_track_errors(self, inner_iter, samples_per_error):
         return (inner_iter+1) % samples_per_error == 0     

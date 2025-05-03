@@ -16,7 +16,8 @@ release = '0.1.0'
 
 extensions = [
     "myst_nb",
-    "sphinx.ext.autodoc"
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon"
     ]
 
 nb_execution_mode = "off"
