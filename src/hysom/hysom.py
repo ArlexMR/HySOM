@@ -1,20 +1,19 @@
 import numpy as np
 from typing import Union
 from hysom.validators import validate_train_params, validate_prototypes_initialization
-from hysom.train_functions import decay_linear, decay_piecewise, decay_power
-from hysom.train_functions import gaussian, bubble, mexican_hat
-from hysom.train_functions import euclidean, dtw
+from hysom.train_functions import decay_linear, decay_power, gaussian, bubble, mexican_hat, euclidean, dtw
+from hysom.utils.aux_funcs import resolve_function
 
-decay_functions = {"power": decay_power,
+decay_functions_map = {"power": decay_power,
                     "linear": decay_linear,
                          }
 
-neighborhood_functions = {"gaussian": gaussian,
+neighborhood_functions_map = {"gaussian": gaussian,
                           "bubble": bubble,
                           "mexican_hat": mexican_hat
                           }
 
-distance_functions = {"euclidean": euclidean,
+distance_functions_map = {"euclidean": euclidean,
                       "dtw": dtw
                       }
 
@@ -161,44 +160,16 @@ class HSOM:
         if initial_sigma is None:
             initial_sigma = np.sqrt(self.width * self.height)
 
-        validate_train_params(data, epochs, random_order, track_errors, 
-                                    errors_sampling_rate, errors_data_fraction, verbose)
-        # Validate decay functions
-        for param, name in [(decay_sigma_func, 'decay_sigma'), 
-                            (decay_learning_rate_func, 'decay_learning_rate')]:
-            if not (isinstance(param, str) or callable(param)):
-                raise TypeError(f"{name} must be either a string or a callable")
-
-        # Validate neighborhood_function
-        if not (isinstance(neighborhood_function, str) or callable(neighborhood_function)):
-            raise TypeError("neighborhood_function must be a string or callable")
-
-        # Validate distance_function
-        if not (isinstance(distance_function, str) or callable(distance_function)):
-            raise TypeError("distance_function must be a string or callable")
-
-        if isinstance(decay_sigma_func, str):
-            decay_sigma_func = decay_functions[decay_sigma_func]
-
-        if isinstance(decay_learning_rate_func, str):
-            decay_learning_rate_func = decay_functions[decay_learning_rate_func]
-        
-        if isinstance(neighborhood_function, str):
-            neighborhood_function = neighborhood_functions[neighborhood_function]
-
-        if isinstance(distance_function, str):
-            distance_function = distance_functions[distance_function]    
-        
+        validate_train_params(data, epochs,errors_sampling_rate, errors_data_fraction, verbose)
         
         self.initial_sigma = initial_sigma
         self.initial_learning_rate = initial_learning_rate
-        self.decay_sigma_func = decay_sigma_func
-        self.decay_learning_rate_func = decay_learning_rate_func
-        self.neighborhood_function = neighborhood_function
-        self.distance_function = distance_function
         self.min_sigma = min_sigma
         self.min_learning_rate = min_learning_rate
-        
+        self.decay_sigma_func = resolve_function(decay_sigma_func, decay_functions_map)
+        self.decay_learning_rate_func = resolve_function(decay_learning_rate_func, decay_functions_map)
+        self.neighborhood_function = resolve_function(neighborhood_function, neighborhood_functions_map)
+        self.distance_function = resolve_function(distance_function, distance_functions_map)
         nsamples = len(data)
 
         if self._prototypes is None:

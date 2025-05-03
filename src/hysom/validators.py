@@ -3,8 +3,7 @@ import numpy as np
 
 
 
-def validate_train_params(data, epochs, random_order, 
-                               track_errors, errors_sampling_rate, 
+def validate_train_params(data, epochs,  errors_sampling_rate, 
                                errors_data_fraction, verbose):
         # Validate data type
         if not isinstance(data, np.ndarray):
