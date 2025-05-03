@@ -35,3 +35,15 @@ def split_range_auto(start, end, max_parts):
         best_num_parts = max_parts
 
     return split_range(start, end, best_num_parts)
+
+def resolve_function(func_or_str, func_map):
+
+    if isinstance(func_or_str, str):
+        if func_or_str in func_map:
+            return func_map[func_or_str]
+        else:
+            raise ValueError(f"Unknown function '{func_or_str}'")
+    elif callable(func_or_str):
+        return func_or_str
+    else:
+        raise TypeError("Expected a function or string key.")

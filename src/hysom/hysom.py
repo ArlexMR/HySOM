@@ -2,10 +2,10 @@ import numpy as np
 from typing import Union, Callable
 from collections import defaultdict, namedtuple
 from dataclasses import dataclass, field
-from HySOM.src.hysom.validators import validate_constructor_params, validate_train_params, validate_prototypes_initialization
-from HySOM.src.hysom.train_functions import decay_linear, decay_piecewise, decay_power
-from HySOM.src.hysom.train_functions import gaussian, bubble, mexican_hat
-from HySOM.src.hysom.train_functions import euclidean, dtw
+from hysom.validators import validate_train_params, validate_prototypes_initialization
+from hysom.train_functions import decay_linear, decay_piecewise, decay_power
+from hysom.train_functions import gaussian, bubble, mexican_hat
+from hysom.train_functions import euclidean, dtw
 
 decay_functions = {"power": decay_power,
                          "linear": decay_linear,
@@ -36,9 +36,8 @@ class HSOM:
         Shape of the input samples. Typically `(seq_len, 2)`, where `seq_len` is the number 
         of (x, y) coordinate points representing a loop.
 
-    random_seed : int 
-        random_seed to ensure reproducibility
-
+    random_seed : int (dafault = None)
+        random_seed Ensures reproducibility. if None results may change each time due to random elements in the training process
     """
     def __init__(self,
                 width: int,
