@@ -1,14 +1,12 @@
 import numpy as np
-from typing import Union, Callable
-from collections import defaultdict, namedtuple
-from dataclasses import dataclass, field
+from typing import Union
 from hysom.validators import validate_train_params, validate_prototypes_initialization
 from hysom.train_functions import decay_linear, decay_piecewise, decay_power
 from hysom.train_functions import gaussian, bubble, mexican_hat
 from hysom.train_functions import euclidean, dtw
 
 decay_functions = {"power": decay_power,
-                         "linear": decay_linear,
+                    "linear": decay_linear,
                          }
 
 neighborhood_functions = {"gaussian": gaussian,
@@ -56,7 +54,7 @@ class HSOM:
         self._QE = []
         self._prototypes = None
 
-    def random_init(self, data):
+    def random_init(self, data: np.ndarray):
 
         """Initialize prototypes randomly from data
         """
