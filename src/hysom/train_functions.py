@@ -34,12 +34,12 @@ def mexican_hat(grid, center, sigma):
 
 # Distance Functions
 
-def euclidean(codebooks, sample):
-    dif_sqr = (codebooks - sample)**2
+def euclidean(prototypes, sample):
+    dif_sqr = (prototypes - sample)**2
     return dif_sqr.sum(axis = (-1,-2))
      
 
-def dtw(codebooks, sample):
-    #return np.array([[dtw(unit,x) for unit in row] for row in codebooks])
-    return np.array([[tslearndtw(unit,sample) for unit in row] for row in codebooks])
+def dtw(prototypes, sample):
+    #return np.array([[dtw(unit,x) for unit in row] for row in prototypes])
+    return np.array([[tslearndtw(unit,sample) for unit in row] for row in prototypes])
 

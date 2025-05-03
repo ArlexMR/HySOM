@@ -1,1 +1,1 @@
-from hysom._som import HSOM
+from HySOM.src.hysom.hysom import HSOM

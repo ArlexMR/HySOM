@@ -45,10 +45,10 @@ def validate_train_params(data, epochs, random_order,
             raise ValueError(f"verbose must be bool or int > 0, not {type(verbose)} = {verbose}") 
         
 
-def validate_codebooks_initialization(width, height, input_dim, codebooks):
-    if not isinstance(codebooks, np.ndarray):
-         raise TypeError("codebooks must be a np.ndarray")
+def validate_prototypes_initialization(width, height, input_dim, prototypes):
+    if not isinstance(prototypes, np.ndarray):
+         raise TypeError("prototypes must be a np.ndarray")
 
-    if codebooks.shape != (height, width) + input_dim:
-         raise ValueError(f"'codebooks' dimension mismatch. 'codebooks' should be a (height, width, input_dim): ({(height, width) + input_dim}) numpy array instead of {codebooks.shape}")
+    if prototypes.shape != (height, width) + input_dim:
+         raise ValueError(f"'prototypes' dimension mismatch. 'prototypes' should be a (height, width, input_dim): ({(height, width) + input_dim}) numpy array instead of {prototypes.shape}")
          

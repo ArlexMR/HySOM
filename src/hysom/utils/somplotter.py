@@ -5,7 +5,7 @@ from collections import Counter
 from string import ascii_uppercase
 from math import ceil
 from collections import defaultdict
-from hysom.utils.utils import split_range_auto
+from HySOM.src.hysom.utils.aux_funcs import split_range_auto
 from itertools import product
 from typing import Literal
 

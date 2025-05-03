@@ -2,10 +2,10 @@ import numpy as np
 from typing import Union, Callable
 from collections import defaultdict, namedtuple
 from dataclasses import dataclass, field
-from hysom._validators import validate_constructor_params, validate_train_params, validate_codebooks_initialization
-from hysom._functions import decay_linear, decay_piecewise, decay_power
-from hysom._functions import gaussian, bubble, mexican_hat
-from hysom._functions import euclidean, dtw
+from HySOM.src.hysom.validators import validate_constructor_params, validate_train_params, validate_prototypes_initialization
+from HySOM.src.hysom.train_functions import decay_linear, decay_piecewise, decay_power
+from HySOM.src.hysom.train_functions import gaussian, bubble, mexican_hat
+from HySOM.src.hysom.train_functions import euclidean, dtw
 
 decay_functions = {"power": decay_power,
                          "linear": decay_linear,
@@ -22,7 +22,7 @@ distance_functions = {"euclidean": euclidean,
 
 class HSOM:
     """
-    Self-Organizing Map (SOM) for 2D data.
+    Self-Organizing Map (SOM) for 2D time series data.
 
     Parameters
     ----------
@@ -36,48 +36,9 @@ class HSOM:
         Shape of the input samples. Typically `(seq_len, 2)`, where `seq_len` is the number 
         of (x, y) coordinate points representing a loop.
 
-    initial_sigma : float, optional (default: sqrt(width * input_dim[1]))
-        Neighborhood radius at the first iteration.
+    random_seed : int 
+        random_seed to ensure reproducibility
 
-    initial_learning_rate : float, optional (default: 1.0)
-        Learning rate at the first iteration.
-
-    min_sigma : float, optional (default: 0.3)
-        Neighborhood radius at the last iteration.
-
-    min_learning_rate : float, optional (default: 0.01)
-        Learning rate at the last iteration.
-
-    decay_sigma_func : str or callable, optional (default: "power")
-        Decay function for the neighborhood radius.  
-        Available options: `"power"`, `"linear"`.  
-        If callable, the function should accept four arguments:
-        
-        - `init_val` (float): Initial neighborhood radius.
-        - `iter` (int): Current iteration.
-        - `max_iter` (int): Maximum number of iterations.
-        - `min_val` (float): Minimum radius value.  
-        
-        The function must return a numeric value.  
-        See some examples of decay functions in `the source code <https://github.com/ArlexMR/HySOM/blob/main/src/hysom/_functions.py>`_.
-
-    decay_learning_rate_func : str or callable, optional (default: "power")
-        Same format as `decay_sigma_func`, but applied to the learning rate.
-
-    neighborhood_function : str or callable, optional (default: "gaussian")
-        Defines the neighborhood function.  
-        Available options: `"gaussian"`, `"mexican_hat"`, `"bubble"`.  
-        If callable, the function should accept three arguments:
-
-        - `grid` (tuple of numpy arrays): Coordinate matrices as returned by `numpy.meshgrid`.  
-          Use matrix indexing convention:  
-          ```python
-          grid = np.meshgrid(np.arange(width), np.arange(height), indexing="ij")
-          ```
-        - `center` (tuple): Coordinates where the function returns 1.0 (peak value), using `(i, j)` matrix convention.
-        - `sigma` (float): Defines the neighborhood radius.  
-
-        The function should return a matrix of neighborhood values with shape `(width, height)`.
     """
     def __init__(self,
                 width: int,
@@ -94,22 +55,22 @@ class HSOM:
         self._rng = np.random.default_rng(self.random_seed)
         self._TE = []
         self._QE = []
-        self._codebooks = None
+        self._prototypes = None
 
     def random_init(self, data):
 
-        """Initialize codebooks randomly from data
+        """Initialize prototypes randomly from data
         """
         random_sample = self._rng.choice(data,self.width * self.height, replace = False)
-        codeboox_dim = (self.height, self.width) + self.input_dim
-        init_codebooks = random_sample.reshape(codeboox_dim)
-        self.set_init_codebooks(init_codebooks)
+        prototypes_dim = (self.height, self.width) + self.input_dim
+        init_prototypes = random_sample.reshape(prototypes_dim)
+        self.set_init_prototypes(init_prototypes)
 
-    def set_init_codebooks(self, codebooks: np.ndarray):
-        """Initialize codebooks
+    def set_init_prototypes(self, prototypes: np.ndarray):
+        """Initialize prototypes
         """
-        validate_codebooks_initialization(self.width, self.height, self.input_dim, codebooks)
-        self._codebooks = codebooks
+        validate_prototypes_initialization(self.width, self.height, self.input_dim, prototypes)
+        self._prototypes = prototypes
 
     def train(self, data: np.ndarray, 
               epochs: int, 
@@ -140,6 +101,49 @@ class HSOM:
 
         random_order : bool, optional (default=True)
             If True, samples are picked randomly without replacement. If False, they are fed sequentially.
+        
+        initial_sigma : float, optional (default: sqrt(width * input_dim[1]))
+            Neighborhood radius at the first iteration.
+
+        initial_learning_rate : float, optional (default: 1.0)
+            Learning rate at the first iteration.
+
+        min_sigma : float, optional (default: 0.3)
+            Neighborhood radius at the last iteration.
+
+        min_learning_rate : float, optional (default: 0.01)
+            Learning rate at the last iteration.
+
+        decay_sigma_func : str or callable, optional (default: "power")
+            Decay function for the neighborhood radius.  
+            Available options: `"power"`, `"linear"`.  
+            If callable, the function should accept four arguments:
+            
+            - `init_val` (float): Initial neighborhood radius.
+            - `iter` (int): Current iteration.
+            - `max_iter` (int): Maximum number of iterations.
+            - `min_val` (float): Minimum radius value.  
+            
+            The function must return a numeric value.  
+            See some examples of decay functions in `the source code <https://github.com/ArlexMR/HySOM/blob/main/src/hysom/_functions.py>`_.
+
+        decay_learning_rate_func : str or callable, optional (default: "power")
+            Same format as `decay_sigma_func`, but applied to the learning rate.
+
+        neighborhood_function : str or callable, optional (default: "gaussian")
+            Defines the neighborhood function.  
+            Available options: `"gaussian"`, `"mexican_hat"`, `"bubble"`.  
+            If callable, the function should accept three arguments:
+
+            - `grid` (tuple of numpy arrays): Coordinate matrices as returned by `numpy.meshgrid`.  
+            Use matrix indexing convention:  
+            ```python
+            grid = np.meshgrid(np.arange(width), np.arange(height), indexing="ij")
+            ```
+            - `center` (tuple): Coordinates where the function returns 1.0 (peak value), using `(i, j)` matrix convention.
+            - `sigma` (float): Defines the neighborhood radius.  
+
+            The function should return a matrix of neighborhood values with shape `(width, height)`.
 
         track_errors : bool, optional (default=False)
             If True, quantization error (QE) and topographic error (TE) will be computed during training. These values can be accessed using `self.get_QE_history()` and `self.get_TE_history()`.
@@ -200,7 +204,7 @@ class HSOM:
         
         nsamples = len(data)
 
-        if self._codebooks is None:
+        if self._prototypes is None:
             self.random_init(data)
 
         if track_errors is False:
@@ -251,17 +255,17 @@ class HSOM:
         return max_iter,list_idxs
     
     def update(self, sample, learning_rate, sigma):
-        """Update codebooks
+        """Update prototypes
         """
         bmu = self.get_BMU(sample)
         neighborhood_vals = self.neighborhood_function(self._grid, bmu, sigma)
         reshaped_nv = neighborhood_vals.repeat(self.input_dim[0] * self.input_dim[1]).reshape(self.height, self.width, self.input_dim[0], self.input_dim[1])
-        self._codebooks += learning_rate * reshaped_nv * (sample - self._codebooks)
+        self._prototypes += learning_rate * reshaped_nv * (sample - self._prototypes)
  
     def get_BMU(self, sample):
         """return BMU coordinates
         """ 
-        distances = self.distance_function(self._codebooks, sample)
+        distances = self.distance_function(self._prototypes, sample)
         return np.unravel_index(distances.argmin(), distances.shape)
 
     def quantization_error(self, data: np.ndarray):
@@ -275,7 +279,7 @@ class HSOM:
             qe : list
                 Quantization error for each data sample
         """
-        return [self.distance_function(self._codebooks, sample).min() for sample in data]
+        return [self.distance_function(self._prototypes, sample).min() for sample in data]
 
     def topographic_error(self, data: np.ndarray):
         """Topographic error for each sample in data 
@@ -288,7 +292,7 @@ class HSOM:
             qe : list
                 Topographic error for each data sample. 
         """
-        distances = np.array([self.distance_function(self._codebooks, sample) for sample in data])
+        distances = np.array([self.distance_function(self._prototypes, sample) for sample in data])
         xyindexes = [np.unravel_index(np.argpartition(dist_matrix.flatten(), (0,1))[[0,1]], (self.height, self.width)) for dist_matrix in distances]
         bmu_to_nextbmu_dists = [max(abs(X[0] - X[1]), abs(Y[0] - Y[1])) for X,Y in xyindexes]
         return (np.array(bmu_to_nextbmu_dists) > 1).astype(int).tolist()
@@ -308,7 +312,7 @@ class HSOM:
         return t, te
 
     def get_prototypes(self):
-        return self._codebooks
+        return self._prototypes
     
     def get_frequencies(self, data):
         """
@@ -329,7 +333,7 @@ class HSOM:
         self._TE.append((iter, te))
 
     def _compute_errors_fast(self, data):
-        distances = np.array([self.distance_function(self._codebooks, sample) for sample in data])
+        distances = np.array([self.distance_function(self._prototypes, sample) for sample in data])
         qe = distances.min(axis = (1,2)).mean() 
 
         xyindexes = [np.unravel_index(np.argpartition(dist_matrix.flatten(), (0,1))[[0,1]], (self.height, self.width)) for dist_matrix in distances]
