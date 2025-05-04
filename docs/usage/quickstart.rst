@@ -23,28 +23,14 @@ Below is a minimal example demonstrating how to train a Self-Organizing Map (SOM
    # Visualize results
    plot_som_map(som)
 
-For a detailed explanation of the SOM class, including its methods and parameters, refer to the following resources.
+For a detailed explanation of the SOM class, including diagnosing the training process using topographic and quantization errors refer to the following tutorial.
 
 .. toctree::
    :maxdepth: 1
 
    The SOM class <../tutorials/thesomclass>
-   
-To gain better control over the training process, explore the tutorials below.
 
-.. toctree::
-   :maxdepth: 1
-
-   Customizing training parameters <../tutorials/tutorials>
-
-To diagnose the training process using topographic and quantization errors, see the following tutorials.
-
-.. toctree::
-   :maxdepth: 1
-
-   Evaluating training performance <../tutorials/tutorials>
-
-To explore the visualization functions available in the package, refer to the following tutorials.
+To explore the visualization functions available in the package, refer to the following tutorial.
 
 .. toctree::
    :maxdepth: 1

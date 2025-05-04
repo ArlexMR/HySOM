@@ -1,7 +1,7 @@
 import numpy as np
-from typing import Union, Tuple
+from typing import Union, Tuple, List
 from hysom.validators import validate_train_params, validate_prototypes_initialization
-from hysom.train_functions import decay_linear, decay_power, gaussian, bubble, mexican_hat, euclidean, dtw
+from hysom.train_functions import decay_linear, decay_power, gaussian, bubble, euclidean, dtw
 from hysom.utils.aux_funcs import resolve_function
 
 decay_functions_map = {"power": decay_power,
@@ -10,7 +10,6 @@ decay_functions_map = {"power": decay_power,
 
 neighborhood_functions_map = {"gaussian": gaussian,
                           "bubble": bubble,
-                          "mexican_hat": mexican_hat
                           }
 
 distance_functions_map = {"euclidean": euclidean,
@@ -87,8 +86,8 @@ class HSOM:
               random_order: bool = True,
               initial_sigma: float = None,
               initial_learning_rate: float = 1.0,
-              min_sigma: float = 0.3,
-              min_learning_rate: float = 0.01,
+              final_sigma: float = 0.3,
+              final_learning_rate: float = 0.01,
               decay_sigma_func: Union[str, callable]= "power",
               decay_learning_rate_func: Union[str, callable]=  "power",
               neighborhood_function: Union[str, callable]= "gaussian",
@@ -118,28 +117,28 @@ class HSOM:
         initial_learning_rate : float, optional (default: 1.0)
             Learning rate at the first iteration.
 
-        min_sigma : float, optional (default: 0.3)
+        final_sigma : float, optional (default: 0.3)
             Neighborhood radius at the last iteration.
 
-        min_learning_rate : float, optional (default: 0.01)
+        final_learning_rate : float, optional (default: 0.01)
             Learning rate at the last iteration.
 
         decay_sigma_func : str or callable, optional (default: "power")
-            Decay function for the neighborhood radius. Defines how the neighborhood radius change from `initial_sigma` to `min_sigma` 
+            Decay function for the neighborhood radius. Defines how the neighborhood radius change from `initial_sigma` to `final_sigma`.   
             Available options: `"power"`, `"linear"`.  
             If callable, the function should accept four arguments:
             
                 - `init_val` (float): Initial neighborhood radius.
                 - `iter` (int): Current iteration.
                 - `max_iter` (int): Maximum number of iterations.
-                - `min_val` (float): Minimum radius value.  
+                - `final_val` (float): Minimum radius value.  
                 
             The function must return a numeric value.  
 
             Examples
             --------
-            >>> def decay_linear(init_val, iteration, max_iter, min_val):
-            >>>    slope =  (init_val - min_val) / max_iter 
+            >>> def decay_linear(init_val, iteration, max_iter, final_val):
+            >>>    slope =  (init_val - final_val) / max_iter 
             >>>    return init_val - (slope * iteration)
 
             See the Tutorials for additional details
@@ -150,7 +149,7 @@ class HSOM:
         neighborhood_function : str or callable, optional (default: "gaussian")
             Defines the neighborhood function.   
 
-            Available options: `"gaussian"`, `"mexican_hat"`, `"bubble"`.  
+            Available options: `"gaussian"`, `"bubble"`.  
             If callable, the function should accept three arguments:
 
                 - `grid` (tuple of numpy arrays): Coordinate matrices as returned by `numpy.meshgrid` using matrix indexing convention:  
@@ -159,6 +158,18 @@ class HSOM:
 
             The function should return a matrix of neighborhood values with shape `(width, height)`.
             See the Tutorials for additional details
+
+        distance_function : str or callable, optional (default: "dtw")
+            Defines the distance function used to identify the BMU.  
+
+            Available options: `"dtw"`, `"euclidean"`.   
+
+            If callable, the function should accept two arguments:
+
+                - `prototypes` (np.ndarray): prototypes array as returned by `get_prototypes()`.
+                - `sample` (np.ndarray): a sample data of shape `input_dim`.  
+
+            The function should return an `np.array` of shape (`width`, `height`, `seq_len`, 2)  containing the distance from `sample` to each prototype
 
         track_errors : bool, optional (default=False)
             If True, quantization error (QE) and topographic error (TE) will be computed during training. These values can be accessed using `get_QE_history()` and `get_TE_history()`.
@@ -183,8 +194,8 @@ class HSOM:
         
         self.initial_sigma = initial_sigma
         self.initial_learning_rate = initial_learning_rate
-        self.min_sigma = min_sigma
-        self.min_learning_rate = min_learning_rate
+        self.final_sigma = final_sigma
+        self.final_learning_rate = final_learning_rate
         self.decay_sigma_func = resolve_function(decay_sigma_func, decay_functions_map)
         self.decay_learning_rate_func = resolve_function(decay_learning_rate_func, decay_functions_map)
         self.neighborhood_function = resolve_function(neighborhood_function, neighborhood_functions_map)
@@ -220,8 +231,8 @@ class HSOM:
 
             for inner_iter, idx in enumerate(idxs): 
                 sample = data[idx]
-                learning_rate = self.decay_learning_rate_func(self.initial_learning_rate, iter, max_iter, self.min_learning_rate)
-                sigma = self.decay_sigma_func(self.initial_sigma, iter, max_iter, self.min_sigma)
+                learning_rate = self.decay_learning_rate_func(self.initial_learning_rate, iter, max_iter, self.final_learning_rate)
+                sigma = self.decay_sigma_func(self.initial_sigma, iter, max_iter, self.final_sigma)
                 self._update(sample, learning_rate, sigma)
 
                 if self._is_time_to_track_errors(inner_iter, samples_per_error):
@@ -264,9 +275,10 @@ class HSOM:
         """
 
         distances = self.distance_function(self._prototypes, sample)
-        return np.unravel_index(distances.argmin(), distances.shape)
+        unraveled = np.unravel_index(distances.argmin(), distances.shape)
+        return tuple(int(x) for x in unraveled)
 
-    def quantization_error(self, data: np.ndarray):
+    def quantization_error(self, data: np.ndarray) -> List:
         """
         Compute the quantization error for each sample in `data`.
 
@@ -282,7 +294,7 @@ class HSOM:
         """
         return [self.distance_function(self._prototypes, sample).min() for sample in data]
 
-    def topographic_error(self, data: np.ndarray):
+    def topographic_error(self, data: np.ndarray) -> List:
         """
         Compute the topographic error for each sample in `data`.
 
@@ -301,7 +313,7 @@ class HSOM:
         bmu_to_nextbmu_dists = [max(abs(X[0] - X[1]), abs(Y[0] - Y[1])) for X,Y in xyindexes]
         return (np.array(bmu_to_nextbmu_dists) > 1).astype(int).tolist()
 
-    def get_QE_history(self) -> Tuple[Tuple[int, ...], Tuple[float, ...]]:
+    def get_QE_history(self) -> Tuple[List[int], List[float]]:
         """
         Get the average quantization error across iterations.
 
@@ -309,10 +321,10 @@ class HSOM:
 
         Returns
         -------
-        iteration : Tuple
+        iteration : List
             Iteration indices.
 
-        QE : Tuple
+        QE : List
             Average quantization error values.
 
         """
@@ -323,7 +335,7 @@ class HSOM:
             t = qe = None
         return t, qe
 
-    def get_TE_history(self)-> Tuple[Tuple[int, ...], Tuple[float, ...]]:
+    def get_TE_history(self)-> Tuple[List[int], List[float]]:
         """
         Get the average topographic error across iterations.
 
@@ -331,10 +343,10 @@ class HSOM:
 
         Returns
         -------
-        iteration : Tuple
+        iteration : List
             Iteration indices.
 
-        QE : Tuple
+        TE : List
             Average topographic error values.
 
         """

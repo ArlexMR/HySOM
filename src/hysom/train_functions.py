@@ -7,17 +7,14 @@ with warnings.catch_warnings():
 
 
 #Decay functions
-def decay_linear(init_val, iter, max_iter, min_val):
-     slope =  (init_val - min_val) / max_iter 
+def decay_linear(init_val, iter, max_iter, final_val):
+     slope =  (init_val - final_val) / max_iter 
      return init_val - (slope * iter)
 
-def decay_power(init_val, iter, max_iter, min_val):
-     min_frac = min_val / init_val
+def decay_power(init_val, iter, max_iter, final_val):
+     min_frac = final_val / init_val
      fraction = min_frac ** (iter / max_iter)
      return init_val * fraction
-
-def decay_piecewise(init_val, iter, max_iter, min_val):
-     pass
 
 # Neighborhood functions
 def gaussian(grid, center, sigma):
@@ -29,9 +26,6 @@ def gaussian(grid, center, sigma):
 def bubble(grid, center, sigma):
      pass
 
-def mexican_hat(grid, center, sigma):
-     pass
-
 # Distance Functions
 
 def euclidean(prototypes, sample):
@@ -40,6 +34,5 @@ def euclidean(prototypes, sample):
      
 
 def dtw(prototypes, sample):
-    #return np.array([[dtw(unit,x) for unit in row] for row in prototypes])
     return np.array([[tslearndtw(unit,sample) for unit in row] for row in prototypes])
 
