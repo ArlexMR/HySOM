@@ -1,5 +1,5 @@
 sphinx
 pydata_sphinx_theme
-myst-parser
+myst-nb
 sphinx-autodoc-typehints
 sphinxcontrib-napoleon
