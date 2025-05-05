@@ -4,3 +4,4 @@ pydata_sphinx_theme
 myst-nb
 sphinx-autodoc-typehints
 sphinxcontrib-napoleon
+Cython
