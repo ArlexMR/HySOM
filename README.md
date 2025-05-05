@@ -5,7 +5,7 @@
 
 ## 🚀 Overview
 
-**HySOM** is a Python library that simplifies the training and visualization of Self-Organizing Maps (SOMs) for 2D time series. It is specifically designed for the study of concentration–discharge (C–Q) hysteresis loops. With **HySOM**, you can access the **General T-Q SOM**—a standard framework for classifying sediment transport hysteresis loops (details on its development can be found [here](www.mypaper.com)). The library also includes several visualization tools to streamline the analysis of sediment transport hysteresis loops. Additionally, **HySOM** allows you to train your own SOM for C–Q analysis.
+**HySOM** is a Python library that simplifies the training and visualization of Self-Organizing Maps (SOMs) for 2D time series. It is specifically designed for the study of concentration–discharge (C–Q) hysteresis loops. With **HySOM**, you can access the **General T-Q SOM**—a standard framework for classifying sediment transport hysteresis loops. The library also includes several visualization tools to streamline the analysis of sediment transport hysteresis loops. Additionally, **HySOM** allows you to train your own SOM for C–Q analysis.
 
 ---
 
@@ -33,7 +33,7 @@ Comprehensive docuemnattion is provided, inclusing quickstart tutorials, How-to 
 
 ---
 ## 📦 Dependencies
-HySOM requires the following libraries for proper functioning:  
+HySOM requires the following libraries for proper functioning (which are automatically installed when installing **HySOM**):  
 - numpy
 - tslearn
 - matplotlib

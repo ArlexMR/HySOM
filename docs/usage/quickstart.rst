@@ -28,7 +28,7 @@ For a detailed explanation of the SOM class, including diagnosing the training p
 .. toctree::
    :maxdepth: 1
 
-   The SOM class <../tutorials/thesomclass>
+   The HSOM class <../tutorials/thesomclass>
 
 To explore the visualization functions available in the package, refer to the following tutorial.
 

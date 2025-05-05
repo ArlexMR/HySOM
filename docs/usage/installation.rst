@@ -12,9 +12,10 @@ Using pip
 
     pip install hysom  
 
-
+<! 
 Using conda
 -------------
 .. code-block:: console
 
     conda install hysom  
+>
