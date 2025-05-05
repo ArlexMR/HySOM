@@ -3,14 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to the HySOM documentation
+Welcome to HySOM's documentation
 ===========================================================
 
 This is the documentation for the **HySOM** Python package. **HySOM** provides tools for analyzing 2D time series data using Self-Organizing Maps (SOM). This package is tailored for studying concentration - discharge hysteresis loops, although any 2D time series can be used.  
 
-The source code is available on `Github <https://github.com/ArlexMR/C-Q-Hysteresis-analysis-tools->`_
+The source code is available on `Github <https://github.com/ArlexMR/HySOM>`_
 
-On this documentation page, you’ll find a quickstart guide with instructions on installation and usage of the package, including sample data. We’ve also written a few tutorials that walk you through code examples to train and use SOM for C-Q hysteresis analysis.
+On this documentation page, you’ll find a quickstart guide with instructions on installation and usage of the package, including sample data. We’ve also written tutorials that walk you through using the General T-Q SOM and training standard SOM for C-Q hysteresis analysis.
 
 
 .. toctree::
