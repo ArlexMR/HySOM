@@ -35,4 +35,4 @@ To explore the visualization functions available in the package, refer to the fo
 .. toctree::
    :maxdepth: 1
 
-   Visualize your SOM <../tutorials/tutorials>
+   Visualize your SOM <../tutorials/vizfunctions>
