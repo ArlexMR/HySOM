@@ -106,8 +106,6 @@ class SOMPlotter:
                     https://matplotlib.org/stable/users/explain/colors/colormaps.html
             
         """
-        # if axs is None:
-        #     fig, axs = self._make_figure()
         
         self.heat_map(loops=loops, 
                         values=np.ones(shape = len(loops)),
@@ -116,26 +114,7 @@ class SOMPlotter:
                         cmap = cmap,
                         colorbar_label="Count"
                         )
-    # def scatter_frequency(self, loops, c = "k", markers = "o"):
-    #     fig, axs = self._make_figure()
-        
 
-             
-    #     bmus = [self.som.get_BMU(loop) for loop in loops]
-    #     random_points = [()]
-    #     # counter = self._get_freq_counter(loops)
-
-    #     for (bmui,bmuj), freq in counter.items():
-    #         coords = np.random.rand(freq, 2)*0.6 + 0.3
-    #         axs[bmui, bmuj].scatter(coords[:,0], coords[:,1], c = , alpha = 0.9, s = 20)
-    #     for ax in axs.flatten():
-    #         ax.collections[0].set_alpha(0.1)
-
-
-    # def _get_freq_counter(self, loops):
-    #     bmu = [self.som.get_BMU(d) for d in loops]
-    #     counter = Counter(bmu)
-    #     return counter
 
     def heat_map(self, loops, values, 
                 axs = None, 
