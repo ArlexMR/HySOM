@@ -24,6 +24,12 @@ Below is a minimal example demonstrating how to train a Self-Organizing Map (SOM
    prototypes = som.get_prototypes() 
    _ = plot_map(prototypes)
 
+You need to add a blank line between the raw directive and your code.
+
+.. raw:: html
+   <p align="center">
+   <img src="https://raw.githubusercontent.com/ArlexMR/HySOM/refs/heads/main/docs/images/SOM_example.png" alt="General T-Q SOM" width="300">
+   </p>
 For a detailed explanation of the HSOM class, including diagnosing the training process using topographic and quantization errors refer to the following tutorial.
 
 .. toctree::
