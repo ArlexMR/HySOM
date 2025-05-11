@@ -24,6 +24,10 @@ Below is a minimal example demonstrating how to train a Self-Organizing Map (SOM
    prototypes = som.get_prototypes() 
    _ = plot_map(prototypes)
 
+.. image:: ../images/SOM_example.png
+  :width: 400
+  :alt: Trained SOM
+
 For a detailed explanation of the HSOM class, including diagnosing the training process using topographic and quantization errors refer to the following tutorial.
 
 .. toctree::
