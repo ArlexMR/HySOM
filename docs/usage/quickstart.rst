@@ -9,22 +9,22 @@ Below is a minimal example demonstrating how to train a Self-Organizing Map (SOM
 
 .. code-block:: python
 
-   import numpy as np
    from hysom import HSOM
-   from hysom.utils.datasets import load_sample_data
-   from hysom.utils.somplotter import SOMPlotter
-   # Generate synthetic data
-   data = load_sample_data()  
+   from hysom.utils.datasets import get_sample_data
+   from hysom.utils.plots import plot_map
+
+   # Get sample data
+   data = get_sample_data()
 
    # Train SOM
    som = HSOM(width=8, height=8, input_dim = data.shape[1:])
    som.train(data, epochs = 5)
 
    # Visualize results
-   plotter = SOMPlotter(som)
-   plotter.som_map()
+   prototypes = som.get_prototypes() 
+   _ = plot_map(prototypes)
 
-For a detailed explanation of the SOM class, including diagnosing the training process using topographic and quantization errors refer to the following tutorial.
+For a detailed explanation of the HSOM class, including diagnosing the training process using topographic and quantization errors refer to the following tutorial.
 
 .. toctree::
    :maxdepth: 1
