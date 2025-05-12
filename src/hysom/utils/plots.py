@@ -3,26 +3,45 @@ from hysom.utils.aux_funcs import split_range_auto
 from string import ascii_uppercase
 
 def plot_map(prototypes, axs = None, loop_cmap = "inferno", sample_loop_coords = (0,0)):
-        if axs is None:
-            height, width = prototypes.shape[:2]
-            fig, axs = _make_figure(height, width, figsize = (width + 1,height))
-        else:
-            fig = axs[0,0].figure
-        
-        for row in range(axs.shape[0]):
-            for col in range(axs.shape[1]):
-                ax = axs[row,col]
-                loop = prototypes[row,col]
-                _plot_loop(ax, loop, loop_cmap)
+    """
+    Plot Self-Organizing Map grid of prototypes.
 
-        _add_map_coordinates(axs)     
+    Parameters
+    ----------
+    prototypes : np.ndarray
+        prototypes as given by HSOM.get_prototypes()
 
-        # Add sample loop 
-        sample_loop = prototypes[sample_loop_coords]
-        _add_sample_loop(fig, sample_loop, cmap=loop_cmap)  
-        
-        # if return_axes:     
-        return axs
+    axs : array-like, optional
+        array of matplotlib axes to plot on. If None, a new figure and axes are created.
+
+    loop_cmap : str or cmap
+        Any matplotlib colormap. Default is "inferno".
+
+    sample_loop_coords: tuple, optional
+        coordinates of the sample loop to be plotted in the upper right corner of the figure as a sample loop.
+        Default is (0,0).
+    """
+    
+    if axs is None:
+        height, width = prototypes.shape[:2]
+        fig, axs = _make_figure(height, width, figsize = (width + 1,height))
+    else:
+        fig = axs[0,0].figure
+    
+    for row in range(axs.shape[0]):
+        for col in range(axs.shape[1]):
+            ax = axs[row,col]
+            loop = prototypes[row,col]
+            _plot_loop(ax, loop, loop_cmap)
+
+    _add_map_coordinates(axs)     
+
+    # Add sample loop 
+    sample_loop = prototypes[sample_loop_coords]
+    _add_sample_loop(fig, sample_loop, cmap=loop_cmap)  
+    
+    # if return_axes:     
+    return axs
 
 
 def _make_figure(height, width, figsize = None):
