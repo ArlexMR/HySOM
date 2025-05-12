@@ -1,6 +1,12 @@
-import matplotlib.pyplot as plt
-from hysom.utils.aux_funcs import split_range_auto
+from collections import defaultdict
 from string import ascii_uppercase
+from typing import Iterable
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import Colormap, BoundaryNorm, Normalize
+from matplotlib.cm import ScalarMappable
+from hysom import HSOM
+from hysom.utils.aux_funcs import split_range_auto
 
 def plot_map(prototypes, axs = None, loop_cmap = "inferno", sample_loop_coords = (0,0)):
     """
@@ -12,16 +18,16 @@ def plot_map(prototypes, axs = None, loop_cmap = "inferno", sample_loop_coords =
         prototypes as given by HSOM.get_prototypes()
 
     axs : array-like, optional
-        array of matplotlib axes to plot on. If None, a new figure and axes are created.
+        array of matplotlib axes to plot on. If None (recomended), a new figure and axes are created.
 
     loop_cmap : str or cmap
         Any matplotlib colormap. Default is "inferno".
 
     sample_loop_coords: tuple, optional
         coordinates of the sample loop to be plotted in the upper right corner of the figure as a sample loop.
-        Default is (0,0).
+        Coordinates are given in matrix format (row, col). Default is (0,0).
     """
-    
+
     if axs is None:
         height, width = prototypes.shape[:2]
         fig, axs = _make_figure(height, width, figsize = (width + 1,height))
@@ -89,4 +95,106 @@ def _add_sample_loop(fig, sample_loop, cmap):
     plt.colorbar(sc, cax = axcb, orientation = "horizontal")
     axcb.set_xticks([0,100], labels = ["start", "end"], fontsize = 6)
     axcb.tick_params(bottom = False, top = True, labelbottom = False, labeltop = True, pad = 1)
-    
+
+
+def heat_map(som: HSOM, loops: Iterable, values: Iterable, 
+            axs: np.ndarray = None, 
+            agg_method: callable = np.median ,
+            cmap: str | Colormap = "Oranges", 
+            minval: float = None, 
+            maxval: float = None, 
+            scale: str = "linear",
+            colorbar_label: str = None
+            ):
+    prototypes = som.get_prototypes()
+    if axs is None:
+        height, width = prototypes.shape[:2]
+        fig, axs = _make_figure(height, width, figsize = (width + 1,height))
+        _ = plot_map(prototypes, axs= axs)
+
+
+    bmu_vals_dict = _groupby_bmu(som, loops, values)
+    coloring_vals_dict = _aggregateby_bmu(bmu_vals_dict, agg_method=agg_method)
+    _clear_unmatched_bmus(axs, matched_bmus =coloring_vals_dict.keys())
+    _set_values_based_background(axs = axs, 
+                                    bmus = list(coloring_vals_dict.keys()), 
+                                    values=list(coloring_vals_dict.values()), 
+                                    cmap = cmap, 
+                                    minval=minval, 
+                                    maxval=maxval, 
+                                    scale=scale,
+                                    colorbar_label = colorbar_label
+                                    )
+    _clear_unmatched_bmus(axs, matched_bmus =coloring_vals_dict.keys())
+
+def _groupby_bmu(som, loops, vals):
+    bmus_vals = [(som.get_BMU(loop), val) for loop, val in zip(loops,vals)]
+    bmu_vals_dict = defaultdict(list)
+    for bmu, val in bmus_vals:
+        bmu_vals_dict[bmu].append(val)
+
+    return bmu_vals_dict
+
+def _aggregateby_bmu(bmu_vals_dict: dict, agg_method: callable):    
+    bmu_stat = {}
+    for bmu, vals_list in bmu_vals_dict.items():
+        bmu_stat[bmu] = agg_method(vals_list)
+    return bmu_stat
+
+def _clear_unmatched_bmus(axs, matched_bmus):
+    for i in range(axs.shape[0]):
+        for j in range(axs.shape[1]):
+            if not (i,j) in matched_bmus:
+                axs[i,j].collections[0].set_color("grey")
+                axs[i,j].collections[0].set_alpha(0.1)
+
+def _set_values_based_background(axs, bmus, values, cmap, minval, maxval, scale, colorbar_label):
+    if isinstance(cmap, str):
+        cmap = plt.get_cmap(cmap)
+
+    norm = _colorNorm(values, ncolors=cmap.N, minval=minval, maxval=maxval, scale=scale)
+    for bmu, val in zip(bmus, values):
+        color = cmap(norm(val))
+        axs[bmu].set_facecolor(color)
+    _make_colorbar(axs, norm, cmap, colorbar_label)
+
+def _make_colorbar(axs, norm, cmap, colorbar_label):
+    if colorbar_label is None:
+        colorbar_label = "Values"
+    scalarmappable = ScalarMappable(norm=norm, cmap=cmap)
+    ax_cb = axs[0,0].figure.add_axes([0.77,0.11,0.025,0.5])
+    cax = plt.colorbar(scalarmappable, cax = ax_cb)
+    ax_cb.set_ylabel(colorbar_label)
+    if isinstance(norm, BoundaryNorm): #Discrete colorbar
+        _displace_colorbar_ticks(ax_cb, norm)
+
+def _colorNorm(values, ncolors, minval, maxval, scale):
+    if minval is None: minval = min(values) 
+    if maxval is None: maxval = max(values)
+    bounds = _colorbounds(values, minval, maxval, scale)
+    if isinstance(values[0], int):
+        norm = BoundaryNorm(bounds, ncolors)
+    else:
+        norm = Normalize(vmin = minval, vmax=maxval)
+    return norm
+
+def _colorbounds(values, minval, maxval, scale):
+    if minval == maxval:
+        maxval =int(maxval) + 0.9999   #get a full (constant) range
+        bounds = [minval, maxval]
+    elif isinstance(values[0],int): 
+        splitted_range = split_range_auto(minval, maxval, max_parts=10)
+        bounds = splitted_range + [splitted_range[-1] + 1] # add an additional element so max value is correctly included
+    else:
+        bounds = np.linspace(minval, maxval, num = 10)
+    return bounds
+
+def _displace_colorbar_ticks(ax_cb, norm):
+    ylims = ax_cb.get_ylim()
+    ax_cb.tick_params(axis='y', which='minor', right=False)
+    yticks = norm.boundaries
+    displaced_yticks = yticks[:-1] + 0.5 * np.diff(yticks)
+    yticklabels = [str(yt) for yt in yticks[:-1]]
+    ax_cb.set_yticks(displaced_yticks, yticklabels)
+    ax_cb.set_ylim(ylims)
+        
