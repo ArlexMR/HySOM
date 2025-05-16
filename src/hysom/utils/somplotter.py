@@ -1,11 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from matplotlib.figure import Figure as mplFigure
 from string import ascii_uppercase
 from collections import defaultdict
 from hysom.utils.aux_funcs import split_range_auto
 from itertools import product
-from typing import Literal
+from typing import Literal, Tuple
 
 def calc_HI(sample):
     x = sample[:,0]
@@ -37,11 +38,11 @@ class SOMPlotter:
         # if return_axes:     
         return axs
     
-    def _make_figure(self, figsize = None):
+    def _make_figure(self, figsize = None) -> Tuple[mplFigure, np.ndarray]:
         height, width = self.som.get_prototypes().shape[:2]
         if figsize is None:
             figsize = (width + 1,height)
-        fig, axs = plt.subplots(height,width, figsize = figsize)
+        fig, axs = plt.subplots(height,width, figsize = figsize, squeeze=False)
         plt.subplots_adjust(wspace = 0.0, right= 0.75, hspace = 0.0)
         return fig, axs
 
