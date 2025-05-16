@@ -40,7 +40,7 @@ class HSOM:
                 width: int,
                 height: int,
                 input_dim: tuple,
-                random_seed: int= None
+                random_seed: int | None= None
                 ):
 
         self.width = width
@@ -95,7 +95,7 @@ class HSOM:
               track_errors: bool = False, 
               errors_sampling_rate: int = 4, 
               errors_data_fraction: float = 1.0,
-              verbose: bool = False
+              verbose: bool | int= False
               ):
         """
         Trains the Self-Organizing Map (SOM).
@@ -259,7 +259,7 @@ class HSOM:
         reshaped_nv = neighborhood_vals.repeat(self.input_dim[0] * self.input_dim[1]).reshape(self.height, self.width, self.input_dim[0], self.input_dim[1])
         self._prototypes += learning_rate * reshaped_nv * (sample - self._prototypes)
  
-    def get_BMU(self, sample: np.ndarray) -> Tuple[int,int]:
+    def get_BMU(self, sample: np.ndarray) -> Tuple:
         """
         Return BMU coordinates for a given `sample`, following matrix notation: `(row, col)`.
 
@@ -313,7 +313,7 @@ class HSOM:
         bmu_to_nextbmu_dists = [max(abs(X[0] - X[1]), abs(Y[0] - Y[1])) for X,Y in xyindexes]
         return (np.array(bmu_to_nextbmu_dists) > 1).astype(int).tolist()
 
-    def get_QE_history(self) -> Tuple[List[int], List[float]] | Tuple[None, None]:
+    def get_QE_history(self) -> Tuple:
         """
         Get the average quantization error across iterations.
 
@@ -335,7 +335,7 @@ class HSOM:
             t = qe = None
         return t, qe
 
-    def get_TE_history(self)-> Tuple[List[int], List[float]]:
+    def get_TE_history(self)-> Tuple:
         """
         Get the average topographic error across iterations.
 
@@ -356,7 +356,7 @@ class HSOM:
             t = te = None
         return t, te
 
-    def get_prototypes(self) -> np.ndarray:
+    def get_prototypes(self) -> np.ndarray | None:
         """
         Get the prototypes.
 
