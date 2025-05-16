@@ -1,5 +1,6 @@
 from hysom import HSOM
 from hysom.utils.datasets import fetch_json
+from hysom.train_functions import dtw 
 import numpy as np
 generalTQsom_prototypes_url = "https://raw.githubusercontent.com/ArlexMR/HySOM/refs/heads/main/src/hysom/data/generalTQSOM_prots.json"
 
@@ -11,6 +12,6 @@ def get_generalTQSOM() -> HSOM:
     
     som = HSOM(width = 8, height = 8, input_dim=(100,2))
     som.set_init_prototypes(np.array(prototypes))
-    
+    som.distance_function = dtw
     
     return som
