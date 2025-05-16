@@ -40,7 +40,7 @@ class HSOM:
                 width: int,
                 height: int,
                 input_dim: tuple,
-                random_seed: int | None= None
+                random_seed: int | None | None= None
                 ):
 
         self.width = width
@@ -95,7 +95,7 @@ class HSOM:
               track_errors: bool = False, 
               errors_sampling_rate: int = 4, 
               errors_data_fraction: float = 1.0,
-              verbose: bool | int= False
+              verbose: bool | int| int= False
               ):
         """
         Trains the Self-Organizing Map (SOM).
