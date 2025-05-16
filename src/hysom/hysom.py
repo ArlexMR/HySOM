@@ -40,7 +40,7 @@ class HSOM:
                 width: int,
                 height: int,
                 input_dim: tuple,
-                random_seed: int= None
+                random_seed: int | None= None
                 ):
 
         self.width = width
@@ -95,7 +95,7 @@ class HSOM:
               track_errors: bool = False, 
               errors_sampling_rate: int = 4, 
               errors_data_fraction: float = 1.0,
-              verbose: bool = False
+              verbose: bool | int= False
               ):
         """
         Trains the Self-Organizing Map (SOM).
@@ -313,7 +313,7 @@ class HSOM:
         bmu_to_nextbmu_dists = [max(abs(X[0] - X[1]), abs(Y[0] - Y[1])) for X,Y in xyindexes]
         return (np.array(bmu_to_nextbmu_dists) > 1).astype(int).tolist()
 
-    def get_QE_history(self) -> Tuple[List[int], List[float]] | Tuple[None, None]:
+    def get_QE_history(self) -> Tuple[Tuple[int], Tuple[float]] | Tuple[None, None]:
         """
         Get the average quantization error across iterations.
 
