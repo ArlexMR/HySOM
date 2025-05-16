@@ -1,12 +1,15 @@
-from collections import defaultdict
-from string import ascii_uppercase
-from typing import Iterable
 import numpy as np
+import numpy.typing as npt
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure as mplFigure
 from matplotlib.colors import Colormap, BoundaryNorm, Normalize
 from matplotlib.cm import ScalarMappable
+from collections import defaultdict
+from string import ascii_uppercase
+from typing import Iterable, Tuple, Callable, Any
 from hysom import HSOM
 from hysom.utils.aux_funcs import split_range_auto
+
 
 def plot_map(prototypes, axs = None, loop_cmap = "inferno", sample_loop_coords = (0,0)):
     """
@@ -46,14 +49,13 @@ def plot_map(prototypes, axs = None, loop_cmap = "inferno", sample_loop_coords =
     sample_loop = prototypes[sample_loop_coords]
     _add_sample_loop(fig, sample_loop, cmap=loop_cmap)  
     
-    # if return_axes:     
     return axs
 
 
-def _make_figure(height, width, figsize = None):
+def _make_figure(height, width, figsize = None)-> Tuple[mplFigure, np.ndarray]:
     if figsize is None:
         figsize = (width + 1,height)
-    fig, axs = plt.subplots(height,width, figsize = figsize)
+    fig, axs = plt.subplots(height,width, figsize = figsize, squeeze=False)
     plt.subplots_adjust(wspace = 0.0, right= 0.75, hspace = 0.0)
     return fig, axs
 
@@ -96,15 +98,35 @@ def _add_sample_loop(fig, sample_loop, cmap):
     axcb.set_xticks([0,100], labels = ["start", "end"], fontsize = 6)
     axcb.tick_params(bottom = False, top = True, labelbottom = False, labeltop = True, pad = 1)
 
+def heatmap_frequency(som: HSOM, loops, cmap = "Oranges", dots_color = "k",axs = None):
+    """ Plot frequency distribution
+    Parameters
+    ----------
+    loops : np.ndarray
+        Data array. The first dimension corresponds to the number of samples.
+
+    cmap : str | colormap (optional, default = "Oranges")
+        The colormap (an instance of matplotlib.colors.Colormap) or registered colormap name used to map 
+        frequency counts to colors. See more info at:
+                https://matplotlib.org/stable/users/explain/colors/colormaps.html
+        
+    """
+    
+    heat_map(som, loops=loops, 
+                    values=np.ones(shape = len(loops)),
+                    agg_method=len,
+                    cmap = cmap,
+                    colorbar_label="Count"
+                    )
 
 def heat_map(som: HSOM, loops: Iterable, values: Iterable, 
-            axs: np.ndarray = None, 
-            agg_method: callable = np.median ,
+            axs: np.ndarray | None= None, 
+            agg_method: Callable[[Any], float] = np.median ,
             cmap: str | Colormap = "Oranges", 
-            minval: float = None, 
-            maxval: float = None, 
+            minval: float | None = None, 
+            maxval: float | None = None, 
             scale: str = "linear",
-            colorbar_label: str = None
+            colorbar_label: str | None = None
             ):
     prototypes = som.get_prototypes()
     if axs is None:
@@ -135,7 +157,7 @@ def _groupby_bmu(som, loops, vals):
 
     return bmu_vals_dict
 
-def _aggregateby_bmu(bmu_vals_dict: dict, agg_method: callable):    
+def _aggregateby_bmu(bmu_vals_dict: dict, agg_method: Callable[[Any], float]):    
     bmu_stat = {}
     for bmu, vals_list in bmu_vals_dict.items():
         bmu_stat[bmu] = agg_method(vals_list)
