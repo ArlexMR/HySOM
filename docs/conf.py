@@ -13,7 +13,7 @@ except ImportError as e:
 project = 'HySOM'
 copyright = '2025, Arlex Marin Ramirez'
 author = 'Arlex Marin Ramirez'
-release = '0.1.2'
+release = '0.2.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

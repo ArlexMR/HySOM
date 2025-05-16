@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Union, Tuple, List
+from typing import Union, Tuple, List, Callable
 from hysom.validators import validate_train_params, validate_prototypes_initialization
 from hysom.train_functions import decay_linear, decay_power, gaussian, bubble, euclidean, dtw
 from hysom.utils.aux_funcs import resolve_function
@@ -84,14 +84,14 @@ class HSOM:
     def train(self, data: np.ndarray, 
               epochs: int, 
               random_order: bool = True,
-              initial_sigma: float = None,
+              initial_sigma: float | None= None,
               initial_learning_rate: float = 1.0,
               final_sigma: float = 0.3,
               final_learning_rate: float = 0.01,
-              decay_sigma_func: Union[str, callable]= "power",
-              decay_learning_rate_func: Union[str, callable]=  "power",
-              neighborhood_function: Union[str, callable]= "gaussian",
-              distance_function: Union[str, callable] = "dtw", 
+              decay_sigma_func: Union[str, Callable]= "power",
+              decay_learning_rate_func: Union[str, Callable]=  "power",
+              neighborhood_function: Union[str, Callable]= "gaussian",
+              distance_function: Union[str, Callable] = "dtw", 
               track_errors: bool = False, 
               errors_sampling_rate: int = 4, 
               errors_data_fraction: float = 1.0,
@@ -313,7 +313,7 @@ class HSOM:
         bmu_to_nextbmu_dists = [max(abs(X[0] - X[1]), abs(Y[0] - Y[1])) for X,Y in xyindexes]
         return (np.array(bmu_to_nextbmu_dists) > 1).astype(int).tolist()
 
-    def get_QE_history(self) -> Tuple[List[int], List[float]]:
+    def get_QE_history(self) -> Tuple[List[int], List[float]] | Tuple[None, None]:
         """
         Get the average quantization error across iterations.
 
