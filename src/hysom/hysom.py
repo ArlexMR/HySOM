@@ -367,6 +367,63 @@ class HSOM:
         """
 
         return self._prototypes
+    
+    def attribute_matrix(self, data: np.ndarray,
+                      attribute: np.ndarray,
+                      agg_method: Callable[[List], float] = np.median) -> np.ndarray:
+        """
+        Create an attribute matrix based on the provided data and attribute values.
+
+        Parameters
+        ----------
+        data : np.ndarray
+            Collection of data samples with shape `(nsamples, seq_len, 2)`.
+
+        attribute : np.ndarray
+            Attribute values corresponding to each sample in `data`.
+
+        agg_method : Callable, optional (default=np.median)
+            Aggregation method to apply to the attribute values for each BMU.
+
+        Returns
+        -------
+        np.ndarray
+            Attribute map with shape `(height, width)`.
+        """
+        
+        bmus = [self.get_BMU(sample) for sample in data]
+        bmu_to_attr = {bmu: [] for bmu in set(bmus)}
+        
+        for bmu, attr in zip(bmus, attribute):
+            bmu_to_attr[bmu].append(attr)
+
+        attr_map = np.empty((self.height, self.width))
+        attr_map.fill(np.nan)
+
+        for bmu, attrs in bmu_to_attr.items():
+            attr_map[bmu] = agg_method(attrs)
+
+        return attr_map
+    
+    def frequency_matrix(self, data: np.ndarray, relative = False) -> np.ndarray:
+        """
+        Create a frequency matrix based on the provided data.
+
+        Parameters
+        ----------
+        data : np.ndarray
+            Collection of data samples with shape `(nsamples, seq_len, 2)`.
+
+        Returns
+        -------
+        np.ndarray
+            Frequency matrix with shape `(height, width)`.
+        """
+        freq_matrix = self.attribute_matrix(data = data, attribute= np.ones(len(data)), agg_method=sum)
+        freq_matrix[np.isnan(freq_matrix)] = 0  # Replace NaN values with 0
+        if relative:
+            freq_matrix = freq_matrix / freq_matrix.sum()  # Normalize to [0, 1]
+        return freq_matrix
 
     def _track_errors(self, iter, data, nsamples_error):
         subset = self._rng.choice(data, size = nsamples_error, replace=False)
