@@ -129,6 +129,8 @@ def heat_map(som: HSOM, loops: Iterable, values: Iterable,
             colorbar_label: str | None = None
             ):
     prototypes = som.get_prototypes()
+    if prototypes is None:
+        raise ValueError("The SOM has no prototypes. Please train the SOM before calling this function.")
     if axs is None:
         height, width = prototypes.shape[:2]
         fig, axs = _make_figure(height, width, figsize = (width + 1,height))
