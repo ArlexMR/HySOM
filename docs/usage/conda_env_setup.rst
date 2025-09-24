@@ -36,7 +36,7 @@ Finally, install **HySOM**:
 
 .. code-block:: bash
 
-   conda install hysom
+   pip install hysom
 
-Your environment is now set up and ready to use! 🎉
+Your environment is now set up and ready to use! 
 

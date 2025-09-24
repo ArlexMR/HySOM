@@ -5,7 +5,7 @@ This section provides tutorials to help you get started with the HySOM package. 
 Below is a minimal example demonstrating how to train a Self-Organizing Map (SOM) with default hyperparameters on a sample dataset and visualize the results.
 
 
-✨ Quick Example
+Quick Example
 
 .. code-block:: python
 
