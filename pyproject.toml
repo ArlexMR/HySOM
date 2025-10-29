@@ -3,11 +3,12 @@ requires = ["setuptools>=61.0", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
+requires-python = ">=3.8,<3.14"
 name = "HySOM"
 description = "Fast, lightweight library for training Self-Organizing Maps on 2D time series, tailored for analyzing concentration-discharge hysteresis loops."
-version = "0.2.0"
+version = "0.2.1"
 readme = "README.md"
-dependencies = ["numpy>=1.26", "matplotlib>=3.9", "tslearn>=0.6.3"]
+dependencies = ["numpy>=1.26", "matplotlib>=3.9", "tslearn>=0.6.3", "scikit-learn==1.5.2"]
 authors = [
     {name = "Arlex Marin Ramirez", email = "arlexmarinr@gmail.com"}
 ]
