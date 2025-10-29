@@ -1,7 +1,7 @@
 # HySOM
 
-**Fast, lightweight Python library for training Self-Organizing Maps on 2D time series, tailored for analyzing concentration-discharge hysteresis loops.**
-
+**Fast, lightweight Python library for training Self-Organizing Maps on 2D time series, tailored for analyzing concentration-discharge hysteresis loops.**  
+**NOTE**: Currently, Python 3.14 is not yet supported due to missing precompiled dependencies. Please use Python 3.8–3.13. Support for Python 3.14 will be added shortly.
 
 ## Overview
 
@@ -34,6 +34,8 @@ Comprehensive documentation is provided, including quickstart tutorials, How-to 
 ---
 ## 📦 Dependencies
 HySOM requires the following libraries for proper functioning (which are automatically installed when installing **HySOM**):  
+
+- Python >3.8, < 3.14
 - numpy
 - tslearn
 - matplotlib
