@@ -4,6 +4,7 @@ from hysom.train_functions import dtw
 import numpy as np
 generalTQsom_prototypes_url = "https://raw.githubusercontent.com/ArlexMR/HySOM/refs/heads/main/src/hysom/data/generalTQSOM_prots.json"
 
+
 def get_generalTQSOM() -> HSOM:
     """
     Returns the General T-Q SOM. A pretrained SOM for sediment transport hysteresis loops.
