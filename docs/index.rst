@@ -19,6 +19,8 @@ On this documentation page, you’ll find a quickstart guide with instructions o
 
    Installation <usage/installation>
    Quickstart <usage/quickstart>
+   Tutorials <usage/tutorials>
+   How-To guides <usage/howto>
    api
 
 

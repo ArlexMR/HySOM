@@ -1,11 +1,7 @@
 Quickstart
 ===========
 
-This section provides tutorials to help you get started with the HySOM package. Designed for easy learning, they offer step-by-step guidance on using the package.  
-Below is a minimal example demonstrating how to train a Self-Organizing Map (SOM) with default hyperparameters on a sample dataset and visualize the results.
-
-
-Quick Example
+Here's a minimal working example of using HySOM for training and visualizing an SOM 
 
 .. code-block:: python
 
@@ -27,17 +23,3 @@ Quick Example
 .. image:: ../images/SOM_example.png
   :width: 400
   :alt: Trained SOM
-
-For a detailed explanation of the HSOM class, including diagnosing the training process using topographic and quantization errors refer to the following tutorial.
-
-.. toctree::
-   :maxdepth: 1
-
-   The HSOM class <../tutorials/thesomclass>
-
-To explore the visualization functions available in the package, refer to the following tutorial.
-
-.. toctree::
-   :maxdepth: 1
-
-   Visualize your SOM <../tutorials/vizfunctions>
