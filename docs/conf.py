@@ -24,6 +24,9 @@ extensions = [
     "sphinx.ext.napoleon"
     ]
 
+myst_enable_extensions = [
+    "dollarmath",
+]
 nb_execution_mode = "off"
 
 source_suffix = {
