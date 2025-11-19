@@ -356,7 +356,7 @@ class HSOM:
             t = te = None
         return t, te
 
-    def get_prototypes(self) -> np.ndarray | None:
+    def get_prototypes(self, bmu:tuple[int,int] | None = None) -> np.ndarray:
         """
         Get the prototypes.
 
@@ -365,6 +365,12 @@ class HSOM:
         np.ndarray
             prototypes array.
         """
+        
+        if self._prototypes is None:
+            raise AttributeError("Prototypes haven't been initialized for this HSOM")
+        
+        if bmu:
+            return self._prototypes[bmu]
 
         return self._prototypes
     
