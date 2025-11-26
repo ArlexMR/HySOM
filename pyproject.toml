@@ -8,7 +8,12 @@ name = "HySOM"
 description = "Fast, lightweight library for training Self-Organizing Maps on 2D time series, tailored for analyzing concentration-discharge hysteresis loops."
 version = "0.3.1"
 readme = "README.md"
-dependencies = ["numpy>=1.26,<2.2", "matplotlib>=3.9", "tslearn>=0.6.3", "scikit-learn==1.5.2"]
+dependencies = [
+    "numpy>=1.26,<2.2",
+    "matplotlib>=3.9",
+    "tslearn>=0.6.3",
+    "scikit-learn==1.5.2",
+]
 authors = [
     {name = "Arlex Marin Ramirez", email = "arlexmarinr@gmail.com"}
 ]
