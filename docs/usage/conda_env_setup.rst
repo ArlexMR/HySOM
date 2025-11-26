@@ -33,15 +33,17 @@ Activate the newly created environment:
 
    conda activate hysom-env
 
-(optional) Step 4: Install required conda libraries  
-----------------------------------------------------
-Since `HySOM` will be installed using `pip` instead of `conda`, it is recommend to install `conda` libraries (e.g.: `Pandas`) before installing `HySOM` (`see more details here <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#using-pip-in-an-environment>`_). Note that `numpy`, `matplotlib`, `scikit-learn` and `tslearn` will be installed with `HySOM` in the next step, so you don't have to install them here.  
-  
-If you want to install `Pandas`:  
+(optional) Step 4: Install required `conda` libraries  
+-------------------------------------------------------
+It is discouraged to combine `pip` and `conda` when installing packages in an environment (`see more details here <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#using-pip-in-an-environment>`_). `HySOM` will be installed using `pip`, so, if you need to install any conda package, do it before installing `HySOM` or any other pip package. For example, if you need to install `Pandas` using conda, do it now:  
 
 .. code-block:: bash
 
    conda install pandas
+
+A better option would be too use `pip` to install all your packages.   
+
+Note that `numpy`, `matplotlib`, `scikit-learn` and `tslearn` will be installed with `HySOM` in the next step, so you don't have to install them here. 
 
 Step 5: Install HySOM
 ----------------------
