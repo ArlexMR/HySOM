@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 requires-python = ">=3.8,<3.14"
 name = "HySOM"
 description = "Fast, lightweight library for training Self-Organizing Maps on 2D time series, tailored for analyzing concentration-discharge hysteresis loops."
-version = "0.3.2"
+version = "0.3.3"
 readme = "README.md"
 dependencies = [
     "numpy>=1.26,<2.2",

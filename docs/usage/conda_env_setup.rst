@@ -1,6 +1,6 @@
 :orphan:
 
-Setting Up a Python Environment with Conda
+Setting up a python environment with conda
 ===========================================
 
 Before installing **HySOM**, it is recommended to set up an isolated Python environment using `conda`. This ensures dependency management and avoids conflicts with other packages.

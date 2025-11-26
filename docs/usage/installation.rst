@@ -1,13 +1,25 @@
 Installation
 =============
 
-We highly recommend having a virtual environment to install HySOM. This will help you avoid any potential conflicts with other packages you may have installed. You can use either `venv`, `conda` or `uv`` to create a virtual environment. A short guide using `conda` can be found `here <conda_env_setup.html>`_
+.. Caution::
+    Python 3.14 is not yet supported due to missing precompiled dependencies. Please use Python 3.8–3.13. 
 
-If you already have a virtual environment set up, you can proceed to install HySOM:
+It is recommended to use virtual environments for your projects to avoid potential conflicts with other packages. You can use either `uv` (recommended method) `venv` or `conda`. If you don't know how to set up a virtual environment, check out this quick guides for:
 
+1. `uv <uv_env_setup.html>`_  
+2. `conda <conda_env_setup.html>`_
+
+If you already have a virtual environment set up, you can proceed to install HySOM using pip or uv:
 
 Using pip
 ----------
 .. code-block:: bash
 
     pip install hysom  
+
+
+Using uv
+---------
+.. code-block:: bash
+
+    uv add hysom 
