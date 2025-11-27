@@ -277,6 +277,22 @@ class HSOM:
         distances = self.distance_function(self._prototypes, sample)
         unraveled = np.unravel_index(distances.argmin(), distances.shape)
         return tuple(int(x) for x in unraveled)
+    
+    def get_distance_to_bmu(self, sample: np.ndarray) -> float:
+        """
+        Return the distance to the BMU for a given `sample`.
+
+        Parameters
+        ----------
+        sample : np.ndarray
+            Input sample with shape `(sequence_length, 2)`.
+
+        Returns
+        -------
+        float
+            distance to the BMU.
+        """
+        return float(self.distance_function(self._prototypes, sample).min() )
 
     def quantization_error(self, data: np.ndarray) -> List:
         """
