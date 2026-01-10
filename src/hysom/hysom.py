@@ -1,5 +1,6 @@
 import numpy as np
 from typing import Union, Tuple, List, Callable
+from collections import defaultdict
 from hysom.validators import validate_train_params, validate_prototypes_initialization
 from hysom.train_functions import decay_linear, decay_power, gaussian, bubble, euclidean, dtw
 from hysom.utils.aux_funcs import resolve_function
@@ -293,6 +294,30 @@ class HSOM:
             distance to the BMU.
         """
         return float(self.distance_function(self._prototypes, sample).min() )
+    
+    def classify(self, samples: np.ndarray) -> dict[tuple, list]:
+        """
+        Assign each sample in `samples` to its Best Matching Unit (BMU).
+
+        Parameters
+        ----------
+        samples : np.ndarray
+            Array of input samples with shape `(n_samples, seq_len, n_features)`.
+            For this SOM implementation, `n_features` is typically 2.
+
+        Returns
+        -------
+        dict[tuple, list]
+            A dictionary mapping BMU coordinates (row, col) to a list of samples
+            whose BMU corresponds to that coordinate. Each key is a tuple
+            representing the BMU position on the SOM grid, and each value is the
+            list of samples assigned to that node.
+        """
+        out = defaultdict(list)
+        for sample in samples:
+            bmu = self.get_BMU(sample)
+            out[bmu].append(sample)
+        return out
 
     def quantization_error(self, data: np.ndarray) -> List:
         """
