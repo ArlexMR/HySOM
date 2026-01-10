@@ -6,12 +6,12 @@ from matplotlib.colors import Colormap, BoundaryNorm, Normalize
 from matplotlib.cm import ScalarMappable
 from collections import defaultdict
 from string import ascii_uppercase
-from typing import Iterable, Tuple, Callable, Any
+from typing import Iterable, Tuple, Callable, Any, Literal
 from hysom import HSOM
 from hysom.utils.aux_funcs import split_range_auto
 
 
-def plot_map(prototypes, axs = None, loop_cmap = "inferno", sample_loop_coords = (0,0)):
+def plot_map(prototypes, axs = None, loop_cmap = "inferno", sample_loop_coords = (0,0), coordinates_style: Literal["alphanumeric", "matrix"] = "alphanumeric"):
     """
     Plot Self-Organizing Map grid of prototypes.
 
@@ -43,7 +43,7 @@ def plot_map(prototypes, axs = None, loop_cmap = "inferno", sample_loop_coords =
             loop = prototypes[row,col]
             _plot_loop(ax, loop, loop_cmap)
 
-    _add_map_coordinates(axs)     
+    _add_map_coordinates(axs, style = coordinates_style)     
 
     # Add sample loop 
     sample_loop = prototypes[sample_loop_coords]
@@ -72,17 +72,22 @@ def _clean_spines_and_ticks(ax):
     ax.set_ylim(-0.1,1.1)
     ax.axis('equal')
 
-def _add_map_coordinates(axs):
+def _add_map_coordinates(axs, style: Literal["alphanumeric", "matrix"]):
     fig = axs[0,0].figure
     h, v = fig.get_size_inches()
-
-    for row,letter in zip(range(axs.shape[0]), ascii_uppercase):
+    if style == "alphanumeric":
+        row_coords = ascii_uppercase
+        col_offset = 1
+    else:
+        row_coords = range(axs.shape[0])
+        col_offset = 0
+    for row,letter in zip(range(axs.shape[0]), row_coords):
         ymin,ymax = axs[row, 0].get_ylim()
         axs[row, 0].set_yticks(ticks = [0.5*(ymin + ymax)], labels = [letter])
         axs[row, 0].tick_params(length = h*0.5, labelsize = v)
     for col in range(axs.shape[1]):
         xmin, xmax=axs[0, col].get_xlim() 
-        axs[0, col].set_xticks(ticks = [0.5*(xmin + xmax)], labels = [str(col+1)])
+        axs[0, col].set_xticks(ticks = [0.5*(xmin + xmax)], labels = [str(col+col_offset)])
         axs[0, col].tick_params(bottom = False, top = True, labeltop=True, labelbottom=False, length = v*0.5, labelsize = v)
 
 def _add_sample_loop(fig, sample_loop, cmap):
@@ -98,7 +103,7 @@ def _add_sample_loop(fig, sample_loop, cmap):
     axcb.set_xticks([0,100], labels = ["start", "end"], fontsize = 6)
     axcb.tick_params(bottom = False, top = True, labelbottom = False, labeltop = True, pad = 1)
 
-def heatmap_frequency(som: HSOM, loops, cmap = "Oranges", dots_color = "k",axs = None):
+def heatmap_frequency(som: HSOM, loops, cmap = "Oranges", dots_color = "k",axs = None, coordinates_style: Literal['alphanumeric', 'matrix'] = "alphanumeric"):
     """ Plot frequency distribution
     Parameters
     ----------
@@ -116,7 +121,8 @@ def heatmap_frequency(som: HSOM, loops, cmap = "Oranges", dots_color = "k",axs =
                     values=np.ones(shape = len(loops)),
                     agg_method=len,
                     cmap = cmap,
-                    colorbar_label="Count"
+                    colorbar_label="Count",
+                    coordinates_style = coordinates_style
                     )
 
 def heat_map(som: HSOM, loops: Iterable, values: Iterable, 
@@ -126,7 +132,8 @@ def heat_map(som: HSOM, loops: Iterable, values: Iterable,
             minval: float | None = None, 
             maxval: float | None = None, 
             scale: str = "linear",
-            colorbar_label: str | None = None
+            colorbar_label: str | None = None,
+            coordinates_style: Literal['alphanumeric', 'matrix'] = "alphanumeric"
             ):
     prototypes = som.get_prototypes()
     if prototypes is None:
@@ -134,7 +141,7 @@ def heat_map(som: HSOM, loops: Iterable, values: Iterable,
     if axs is None:
         height, width = prototypes.shape[:2]
         fig, axs = _make_figure(height, width, figsize = (width + 1,height))
-        _ = plot_map(prototypes, axs= axs)
+        _ = plot_map(prototypes, axs= axs, coordinates_style = coordinates_style)
 
 
     bmu_vals_dict = _groupby_bmu(som, loops, values)
