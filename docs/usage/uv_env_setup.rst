@@ -25,5 +25,20 @@ Step 3: install hysom
 
    uv add hysom
 
-Your environment is now set up and ready to use! 
+Your environment is now set up and ready to use. However, you might want to install additional libraries:`
 
+(optional) Step 4: Install IPykernel and other libraries 
+-------------------------------------------------------------------
+If you want to use jupyter notebooks (or notebooks within vscode), you also want to install the IPykernel:
+
+.. code-block:: bash
+
+   uv add --dev ipykernel
+
+Also, if you haven't done it already, install pandas. It is not required for HySOM but you'll likely need it, especially if you want to replicate the tutorials in this documentation:
+
+.. code-block:: bash
+
+   pip install pandas
+
+Your virtual environment is now ready to use!

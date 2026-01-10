@@ -41,17 +41,32 @@ It is discouraged to combine `pip` and `conda` when installing packages in an en
 
    conda install pandas
 
-A better option would be too use `pip` to install all your packages.   
+A better option would be too use `pip` to install all your packages. In that case skip this step
 
 Note that `numpy`, `matplotlib`, `scikit-learn` and `tslearn` will be installed with `HySOM` in the next step, so you don't have to install them here. 
 
 Step 5: Install HySOM
 ----------------------
-Finally, install **HySOM**:
+Now, you can install **HySOM**:
 
 .. code-block:: bash
 
    pip install hysom
 
-Your environment is now set up and ready to use! 
+`HySOM` is now set up and ready to use in your conda environment `hysom-env`. However, you might want to install additional libraries:`
 
+(optional) Step 6: Install IPykernel and other libraries using pip
+-------------------------------------------------------------------
+If you want to use jupyter notebooks, you also want to install the IPykernel:
+
+.. code-block:: bash
+
+   pip install ipykernel
+
+Also, if you haven't done it already, install pandas. It is not required for HySOM but you'll likely need it, especially if you want to replicate the tutorials in this documentation:
+
+.. code-block:: bash
+
+   pip install pandas
+
+Your conda environment is now ready!

@@ -3,7 +3,7 @@ Reference guides
 =================
 
 
-For a detailed explanation of the HSOM class, including diagnosing the training process using topographic and quantization errors refer to the following notebook.
+For a detailed explanation of the HSOM class, including diagnosing the training process using topographic and quantization errors, refer to the following notebook:
 
 .. toctree::
    :maxdepth: 1
