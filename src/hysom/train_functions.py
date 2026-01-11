@@ -1,5 +1,7 @@
 import numpy as np
 import warnings 
+import numba as nb
+from numba import prange
 
 with warnings.catch_warnings():
      warnings.filterwarnings("ignore", message="h5py not installed, hdf5 features will not be supported.")
@@ -31,8 +33,36 @@ def bubble(grid, center, sigma):
 def euclidean(prototypes, sample):
     dif_sqr = (prototypes - sample)**2
     return dif_sqr.sum(axis = (-1,-2))
-     
 
-def dtw(prototypes, sample):
+def dtw_tslearn(prototypes, sample):
     return np.array([[tslearndtw(unit,sample) for unit in row] for row in prototypes])
 
+@nb.njit
+def njit_dtw(x, x_prime):
+    R = np.zeros(shape = (len(x), len(x_prime)))
+    for i in range(len(x)):
+        for j in range(len(x_prime)):
+            R[i, j] = _njit_local_sqr_dist(x[i], x_prime[j])
+            if i > 0 or j > 0:
+                R[i, j] += min(
+                R[i-1, j  ] if i > 0             else np.inf,
+                R[i  , j-1] if j > 0             else np.inf,
+                R[i-1, j-1] if (i > 0 and j > 0) else np.inf
+                )
+    return (R[-1, -1])**(1/2)
+
+@nb.njit
+def _njit_local_sqr_dist(x1, x2):
+    acum = 0.0
+    for i in range(x1.shape[0]):
+        acum += (x1[i] - x2[i])**2
+    return acum
+
+@nb.njit(parallel = True )
+def dtw(prototypes, sample):
+    distances = np.empty(prototypes.shape[:2])
+    rows, columns = prototypes.shape[:2]
+    for i in prange(rows):
+        for j in prange(columns):
+            distances[i,j] = njit_dtw(prototypes[i,j], sample)
+    return distances
