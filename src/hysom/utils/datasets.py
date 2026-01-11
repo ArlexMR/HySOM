@@ -2,7 +2,8 @@ import json
 import numpy as np 
 from importlib import resources
 import warnings
-
+import csv
+from datetime import datetime
 __QT_watershed_01191000_filename = "QT_01191000.json"
 __events_watershed_01191000_filename = "events_01191000.json"
 
@@ -34,3 +35,35 @@ def get_sample_data():
     warn_message= "function 'get_sample_data' is deprecated and will be removed in future versions. Use 'get_labeled_loops' instead"
     warnings.warn(warn_message, category=DeprecationWarning, stacklevel=2) 
     return get_labeled_loops()[0]
+
+
+def get_01191000_qt_data():
+    with open("C:/Users/arlex/Documents/HySOM/HySOM/src/hysom/data/QTdata_01191000.csv") as f:
+        reader = csv.reader(f)
+        header = True
+        data = {}
+        for row in reader:
+            if header:
+                for field in row:
+                    data[field] = []
+                header = False
+                continue
+            for key, val in zip(data.keys(), row):
+                if key == "datetime":
+                    val = datetime.strptime(val,"%Y-%m-%d %H:%M:%S%z")
+                else:
+                    val = float(val)
+                data[key].append(val)
+    return data
+
+def get_01191000_events_data():
+    with open("C:/Users/arlex/Documents/HySOM/HySOM/src/hysom/data/event_times_01191000.csv") as f:
+        reader = csv.reader(f)
+        header = True
+        times = []
+        for row in reader:
+            if header:
+                header = False
+                continue
+            times.append(tuple(datetime.strptime(item, "%Y-%m-%d %H:%M:%S%z") for item in row))
+    return times
