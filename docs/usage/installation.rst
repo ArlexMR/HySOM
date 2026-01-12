@@ -1,9 +1,6 @@
 Installation
 =============
 
-.. Caution::
-    Python 3.14 is not yet supported due to missing precompiled dependencies. Please use Python 3.8–3.13. 
-
 It is recommended to use virtual environments for your projects to avoid potential conflicts with other packages. You can use either `uv` (recommended method) `venv` or `conda`. If you don't know how to set up a virtual environment, check out these quick guides:
 
 1. `uv <uv_env_setup.html>`_  

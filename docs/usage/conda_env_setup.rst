@@ -20,10 +20,7 @@ Once installed, create a new `conda` environment with Python. Open the `Anaconda
 
 .. code-block:: bash
 
-   conda create --name hysom-env python=3.13
-
-.. note::
-   Make sure to install a python version <= 3.13 (the previous line installs python 3.13). `HySOM` is not yet compatible with Python 3.14 
+   conda create --name hysom-env python
 
 Step 3: Activate the Environment
 -----------------------------------
@@ -43,7 +40,7 @@ It is discouraged to combine `pip` and `conda` when installing packages in an en
 
 A better option would be too use `pip` to install all your packages. In that case skip this step
 
-Note that `numpy`, `matplotlib`, `scikit-learn` and `tslearn` will be installed with `HySOM` in the next step, so you don't have to install them here. 
+Note that `numpy` and `matplotlib` will be installed with `HySOM` in the next step, so you don't have to install them here. 
 
 Step 5: Install HySOM
 ----------------------

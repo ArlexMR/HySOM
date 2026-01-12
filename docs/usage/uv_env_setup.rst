@@ -13,10 +13,7 @@ Open your preferred terminal and run:
 
 .. code-block:: bash
 
-   uv init --python 3.13
-
-.. note::
-   Make sure to install a python version <= 3.13 (the previous line installs python 3.13). `HySOM` is not yet compatible with Python 3.14 
+   uv init --python
 
 Step 3: install hysom
 -----------------------------------
