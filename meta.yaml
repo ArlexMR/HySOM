@@ -1,5 +1,5 @@
 {% set name = "hysom" %}
-{% set version = "0.3.3" %}
+{% set version = "0.4.0" %}
 
 package:
   name: {{ name|lower }}
@@ -21,7 +21,7 @@ requirements:
   run:
     - python >=3.9,<3.14
     - numpy >=1.26,<2.2
-    - tslearn
+    - numba
     - matplotlib
 
 test:
