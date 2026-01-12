@@ -4,9 +4,11 @@ from importlib import resources
 import warnings
 import csv
 from datetime import datetime
-__QT_watershed_01191000_filename = "QT_01191000.json"
-__events_watershed_01191000_filename = "events_01191000.json"
+# __QT_watershed_01191000_filename = "QT_01191000.json"
+# __events_watershed_01191000_filename = "events_01191000.json"
 
+__QT_watershed_01191000_filename = "QTdata_01191000.csv"
+__events_watershed_01191000_filename = "event_times_01191000.csv"
 
 def get_labeled_loops():
     ref = resources.files("hysom.data")
@@ -18,17 +20,17 @@ def get_labeled_loops():
     return np.array(data["arrays"]), data["classes"]
 
 
-def get_watershed_timeseries():
-    ref = resources.files("hysom.data")
-    QT_data_file_path = ref.joinpath(__QT_watershed_01191000_filename)
-    events_file_path = ref.joinpath(__events_watershed_01191000_filename)
-    with QT_data_file_path.open('r', encoding='utf-8') as f:
-        QT_data = json.load(f)
+# def get_watershed_timeseries():
+#     ref = resources.files("hysom.data")
+#     QT_data_file_path = ref.joinpath(__QT_watershed_01191000_filename)
+#     events_file_path = ref.joinpath(__events_watershed_01191000_filename)
+#     with QT_data_file_path.open('r', encoding='utf-8') as f:
+#         QT_data = json.load(f)
 
-    with events_file_path.open('r', encoding = 'utf-8') as f:
-        events = json.load(f)
-    events = [(dates[0], dates[1]) for dates in events]
-    return QT_data, events
+#     with events_file_path.open('r', encoding = 'utf-8') as f:
+#         events = json.load(f)
+#     events = [(dates[0], dates[1]) for dates in events]
+#     return QT_data, events
      
 
 def get_sample_data():
@@ -38,7 +40,9 @@ def get_sample_data():
 
 
 def get_01191000_qt_data():
-    with open("C:/Users/arlex/Documents/HySOM/HySOM/src/hysom/data/QTdata_01191000.csv") as f:
+    ref = resources.files("hysom.data")
+    QT_data_file_path = ref.joinpath(__QT_watershed_01191000_filename)
+    with QT_data_file_path.open("r", encoding = "utf-8") as f:
         reader = csv.reader(f)
         header = True
         data = {}
@@ -57,7 +61,9 @@ def get_01191000_qt_data():
     return data
 
 def get_01191000_events_data():
-    with open("C:/Users/arlex/Documents/HySOM/HySOM/src/hysom/data/event_times_01191000.csv") as f:
+    ref = resources.files("hysom.data")
+    events_data_file_path = ref.joinpath(__events_watershed_01191000_filename)
+    with events_data_file_path.open("r", encoding = "utf-8") as f:
         reader = csv.reader(f)
         header = True
         times = []
