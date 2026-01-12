@@ -3,11 +3,6 @@ import warnings
 import numba as nb
 from numba import prange
 
-with warnings.catch_warnings():
-     warnings.filterwarnings("ignore", message="h5py not installed, hdf5 features will not be supported.")
-     from tslearn.metrics import dtw as tslearndtw
-
-
 #Decay functions
 def decay_linear(init_val, iter, max_iter, final_val):
      slope =  (init_val - final_val) / max_iter 
@@ -33,9 +28,6 @@ def bubble(grid, center, sigma):
 def euclidean(prototypes, sample):
     dif_sqr = (prototypes - sample)**2
     return dif_sqr.sum(axis = (-1,-2))
-
-def dtw_tslearn(prototypes, sample):
-    return np.array([[tslearndtw(unit,sample) for unit in row] for row in prototypes])
 
 @nb.njit
 def njit_dtw(x, x_prime):
