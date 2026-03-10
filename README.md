@@ -24,7 +24,7 @@
 ---
 
 # The General T-Q SOM
-Includes the General T–Q SOM, a standard framework for analyzing sediment transport hysteresis loops. Usage examples can be found in the [Documentation](https://hysom.readthedocs.io/en/latest/)
+Includes the General T–Q SOM, a standard framework for analyzing sediment transport hysteresis loops. Usage examples can be found in the [Documentation](https://hysom.readthedocs.io/en/latest/). To get a sense of how the General T-Q SOM can be used, check out this [interactive application](https://hysom-app.streamlit.app/)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/ArlexMR/HySOM/refs/heads/main/docs/images/generalTQsom.png" alt="General T-Q SOM" width="600">

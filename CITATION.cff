@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Marin-Ramirez
+    given-names: Arlex
+    orcid: https://orcid.org/0000-0002-8400-9269
+title: HySOM: A Python toolkit for Self-Organizing Map–based analysis of concentration–discharge hysteresis
+version: 0.4.0
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.18553832
+date-released: 2026-02-09
