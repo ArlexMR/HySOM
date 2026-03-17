@@ -4,7 +4,7 @@
 
 ## Overview
 
-**HySOM** is a Python library that simplifies the training and visualization of Self-Organizing Maps (SOMs) for 2D time series. It is specifically designed for the study of concentration–discharge (C–Q) hysteresis loops. With **HySOM**, you can access the **General T-Q SOM**—a standard framework for classifying sediment transport hysteresis loops. The library also includes several visualization tools to streamline the analysis of sediment transport hysteresis loops. Additionally, **HySOM** allows you to train your own SOM for C–Q analysis.
+**HySOM** is a Python library that simplifies the training and visualization of Self-Organizing Maps (SOMs) for 2D time series. It is specifically designed for the study of concentration–discharge (C–Q) hysteresis loops. With **HySOM**, you can access the **General T-Q SOM**—a standard framework for classifying sediment transport hysteresis loops (learn more [here](https://hess.copernicus.org/articles/30/1359/2026/)). The library also includes several visualization tools to streamline the analysis of sediment transport hysteresis loops. Additionally, **HySOM** allows you to train your own SOM for C–Q analysis.
 
 ---
 > [!Tip]
@@ -28,7 +28,7 @@ Includes the General T–Q SOM, a standard framework for analyzing sediment tran
 
 ---
 # 📖 [Documentation](https://hysom.readthedocs.io/en/latest/)
-Comprehensive documentation is provided, including quickstart tutorials, How-to guides and an API reference. [Click Here!](https://hysom.readthedocs.io/en/latest/)
+Comprehensive documentation is provided, including quickstart tutorials, How-to guides and an API reference. [Click here](https://hysom.readthedocs.io/en/latest/)
 
 ---
 ## 📦 Dependencies
@@ -43,4 +43,8 @@ HySOM requires the following libraries for proper functioning (which are automat
 
 ### 🤝 Contributing
 We welcome contributions! If you'd like to include your own standard SOM for C-Q hysteresis analysis, improve the code, report issues, or request features, please open a GitHub issue or pull request.
+
+### 📃 Citation
+If you use HySOM or the *General T-Q SOM*, consider citing our [paper](https://hess.copernicus.org/articles/30/1359/2026/):  
+> Marin-Ramirez, A., Mahoney, D. T., and McDaniel, G.: Technical note: Analysis of concentration-discharge hysteresis loops using Self-Organizing Maps, Hydrol. Earth Syst. Sci., 30, 1359-1379, 10.5194/hess-30-1359-2026, 2026.
 

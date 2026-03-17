@@ -3,7 +3,8 @@ Using the *General T-Q SOM* in R
 ===================================
 
 If you prefer working in R and all you need is to classify C–Q loops using the *General T–Q SOM* 
-(That is, if you don't need to train a new SOM) you can do it without leaving R. This is how you can do it:
+(learn about the *General T-Q SOM* in our `research paper <https://hess.copernicus.org/articles/30/1359/2026/>`__ and 
+`this tuturial <https://hysom.readthedocs.io/en/latest/tutorials/analyse_TQ_data.html>`__) you can do it without leaving R. This is how you can do it:
 
 Note that to classify a set of loops using the *General T-Q SOM* you simply need:  
 
